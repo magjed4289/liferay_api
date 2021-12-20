@@ -9,19 +9,11 @@ import static io.restassured.RestAssured.given;
 
 public class GeneralSteps{
 	
-	private ConfigFileReader config = ConfigFileReader.getInstance();
-	private String url = config.getConfiguracion().getUri();
-	private BaseModel baseModel;
-	private BaseActions accion;
+	private final ConfigFileReader config = ConfigFileReader.getInstance();
+	private final String url = config.getConfiguracion().getUri();
 
 	public GeneralSteps(BaseModel baseModel) {
-		this.baseModel = baseModel;
-		this.accion = new BaseActions(baseModel);
-	}
-
-	@Given("^el servicio API está levantado$")
-	public void elServicioAPIEstáLevantado() {
-		given().when().get(url).then().statusCode(200);
+		BaseActions accion = new BaseActions(baseModel);
 	}
 
 }

@@ -11,8 +11,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LoginPage extends BasePage {
-    private ConfigFileReader config = ConfigFileReader.getInstance();
-    private String url = config.getConfiguracion().getUri() + config.getConfiguracion().getLoginPage();
+    private final ConfigFileReader config = ConfigFileReader.getInstance();
+    private final String url = config.getConfiguracion().getUri() + config.getConfiguracion().getLoginPage();
 
 
     @FindBy(how = How.ID, using = "username")

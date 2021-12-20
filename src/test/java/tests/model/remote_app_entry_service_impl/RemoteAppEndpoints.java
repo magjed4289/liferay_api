@@ -1,4 +1,4 @@
-package tests.model.RemoteAppEntryServiceImpl;
+package tests.model.remote_app_entry_service_impl;
 
 import io.restassured.response.Response;
 import tests.utils.ConfigFileReader;

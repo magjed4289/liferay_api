@@ -17,11 +17,11 @@ public class ConfigFileReader {
 
 	private static ConfigFileReader configFileReader;
 	private Properties properties;
-	private final String propertyFilePath = "src/test/resources/config/configuration.properties";
 
 	private ConfigFileReader() {
 		BufferedReader reader;
 		try {
+			String propertyFilePath = "src/test/resources/config/configuration.properties";
 			reader = new BufferedReader(new FileReader(propertyFilePath));
 			properties = new Properties();
 			properties.load(reader);
@@ -38,7 +38,7 @@ public class ConfigFileReader {
 
 	public TestConfig getConfiguracion() {
 
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		TestConfig bean = new TestConfig();
 
 		for (String name : properties.stringPropertyNames()) {
@@ -47,10 +47,7 @@ public class ConfigFileReader {
 
 		try {
 			BeanUtils.populate(bean, map);
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
+		} catch (IllegalAccessException | InvocationTargetException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

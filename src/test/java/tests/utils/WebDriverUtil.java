@@ -7,12 +7,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,7 +43,7 @@ public class WebDriverUtil {
         Map<String, Object> commandParams = new HashMap<>();
         commandParams.put("cmd", "Page.setDownloadBehavior");
 
-        HashMap<String, Object> chromePrefs = new HashMap<String, Object>();
+        HashMap<String, Object> chromePrefs = new HashMap<>();
 
 
         chromePrefs.put("profile.default_content_settings.popups", 0);
@@ -65,15 +61,6 @@ public class WebDriverUtil {
         options.addArguments("--no-sandbox", "--window-size=1280,960", "--ignore-certificate-errors");
         options.addArguments("--disable-extensions", "--test-type", "--disable-infobars", "--incognito");
 
-        //options.addArguments("--disable-dev-shm-usage", "--no-sandbox", "--window-size=1280,960", "--ignore-certificate-errors");
-        //options.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
-        //options.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, true);
-
-        //LoggingPreferences logPrefs = new LoggingPreferences();
-        //logPrefs.enable(LogType.BROWSER, Level.ALL);
-        //options.setCapability(CapabilityType.LOGGING_PREFS, logPrefs);
-
-
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
         wait = new WebDriverWait(driver, 20, 1000);
@@ -84,8 +71,6 @@ public class WebDriverUtil {
     public void tearDown(Scenario scenario) {
         if (scenario.isFailed()) {
             // Toma una captura...
-            //final byte[] screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
-            //scenario.embed(screenshot, "image/png"); // ... y la adjunta al reporte.
         }
         if (driver != null) {
             driver.manage().deleteAllCookies();

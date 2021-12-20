@@ -18,21 +18,17 @@ public class BaseClass implements ConcurrentEventListener {
         eventPublisher.registerHandlerFor(TestRunFinished.class, teardown);
     }
 
-    private EventHandler<TestRunStarted> setup = event -> {
-        try {
-            beforeAll();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    private final EventHandler<TestRunStarted> setup = event -> {
+        beforeAll();
     };
 
-    private void beforeAll() throws SQLException {
+    private void beforeAll() {
        log.info("Logging in to API");
        //log in to API in the portal
        log.info("Logged");
     }
 
-    private EventHandler<TestRunFinished> teardown = event -> {
+    private final EventHandler<TestRunFinished> teardown = event -> {
         try {
             afterAll();
         } catch (SQLException e) {

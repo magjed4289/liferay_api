@@ -12,7 +12,7 @@ public class VcfReader {
         List<String> emailsList=new ArrayList<>();
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(
-                    new File(filePath)));
+                    filePath));
 
             String line = null;
             while (true) {

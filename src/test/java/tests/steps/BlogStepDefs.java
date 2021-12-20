@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import tests.model.BaseModel;
-import tests.model.headlessDelivery.blogPostCreated.BlogPostCreated;
+import tests.model.headlessDelivery.blog_post_created.BlogPostCreated;
 import tests.model.headlessDelivery.blogPosting.BlogPostCreator;
 import tests.model.headlessDelivery.blogPosting.BlogPostingEndpoints;
 
@@ -16,11 +16,10 @@ import static junit.framework.TestCase.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class BlogStepDefs {
-    private BaseModel baseModel;
-    private BlogPostCreator blogPostCreator;
-    private BlogPostingEndpoints blogPostingEndpoints;
-    private Gson gson = new Gson();
-    private Map<String, String>entryData = new HashMap<>();
+    private final BaseModel baseModel;
+    private final BlogPostingEndpoints blogPostingEndpoints;
+    private final Gson gson = new Gson();
+    private Map<String, String> entryData = new HashMap<>();
 
     public BlogStepDefs(BaseModel baseModel) {
         this.baseModel = baseModel;
@@ -30,7 +29,7 @@ public class BlogStepDefs {
     @When("I make a valid call to create a blog post")
     public void iMakeAValidCallToCreateABlogPost(Map<String, String> data) {
         entryData = data;
-        blogPostCreator = BlogPostCreator.builder()
+        BlogPostCreator blogPostCreator = BlogPostCreator.builder()
                 .articleBody(data.get("articleBody"))
                 .dateCreated(data.get("dateCreated"))
                 .dateModified(data.get("dateModified"))
@@ -52,10 +51,10 @@ public class BlogStepDefs {
     public void theBlogPostIsBeingCreatedWithAValidData() {
         BlogPostCreated blogPostCreated = gson.fromJson(baseModel.getResponse().asString(), BlogPostCreated.class);
         assertAll("Should return body with correct information",
-                () -> assertEquals(entryData.get("friendlyUrlPath"),blogPostCreated.getFriendlyUrlPath()),
-                () -> assertEquals(entryData.get("headline"),blogPostCreated.getHeadline()),
-                () -> assertEquals(entryData.get("numberOfComments"),blogPostCreated.getNumberOfComments().toString()),
-                () -> assertEquals(entryData.get("articleBody"),blogPostCreated.getArticleBody()),
+                () -> assertEquals(entryData.get("friendlyUrlPath"), blogPostCreated.getFriendlyUrlPath()),
+                () -> assertEquals(entryData.get("headline"), blogPostCreated.getHeadline()),
+                () -> assertEquals(entryData.get("numberOfComments"), blogPostCreated.getNumberOfComments().toString()),
+                () -> assertEquals(entryData.get("articleBody"), blogPostCreated.getArticleBody()),
                 () -> assertFalse(blogPostCreated.getId().toString().isEmpty()));
     }
 }

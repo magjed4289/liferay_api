@@ -7,18 +7,15 @@ import tests.utils.BaseActions;
 import tests.utils.ConfigFileReader;
 
 public class LoginPageSteps {
-    private BaseModel baseModel;
-    private BaseActions accion;
-    private ConfigFileReader config = ConfigFileReader.getInstance();
+    private final ConfigFileReader config = ConfigFileReader.getInstance();
 
 
     public LoginPageSteps(BaseModel baseModel){
-        this.baseModel = baseModel;
-        this.accion = new BaseActions(baseModel);
+        BaseActions accion = new BaseActions(baseModel);
     }
 
-    private LoginPage loginPage = new LoginPage();
-    private String url = config.getConfiguracion().getUri() + config.getConfiguracion().getLoginPage();
+    private final LoginPage loginPage = new LoginPage();
+    private final String url = config.getConfiguracion().getUri() + config.getConfiguracion().getLoginPage();
 
 
     @When("^Example$")
