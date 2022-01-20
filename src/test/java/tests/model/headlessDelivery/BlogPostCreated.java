@@ -1,5 +1,5 @@
 
-package tests.model.headlessDelivery.blog_post_created;
+package tests.model.headlessDelivery;
 
 import java.util.List;
 

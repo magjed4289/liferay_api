@@ -1,10 +1,10 @@
 
-package tests.model.headlessDelivery.blog_post_created;
+package tests.model.headlessDelivery;
 
 import lombok.Data;
 
 @Data
-public class Delete {
+public class Replace {
 
     private String method;
     private String href;
