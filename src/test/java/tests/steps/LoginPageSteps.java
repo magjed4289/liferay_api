@@ -1,6 +1,6 @@
 package tests.steps;
 
-import io.cucumber.java.en.*;
+import io.cucumber.java.en.When;
 import tests.model.BaseModel;
 import tests.pages.LoginPage;
 import tests.utils.BaseActions;
@@ -20,6 +20,5 @@ public class LoginPageSteps {
 
     @When("^Example$")
     public void iTryToLoginWithValidData() {
-        System.out.println("Example");
     }
 }

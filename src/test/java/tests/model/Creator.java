@@ -1,5 +1,5 @@
 
-package tests.model.headlessDelivery;
+package tests.model;
 
 import lombok.Data;
 

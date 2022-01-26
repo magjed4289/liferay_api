@@ -1,12 +1,12 @@
-
 package tests.model.object.objectDefinition;
 
-import lombok.Builder;
 import lombok.Data;
 
-@Data @Builder
+@Data
 public class Status {
 
-    private String label;
-    private String labelI18n;
+    public Integer code;
+    public String label;
+    public String labelI18n;
 }
+

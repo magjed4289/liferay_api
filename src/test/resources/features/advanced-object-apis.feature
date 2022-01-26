@@ -1,8 +1,29 @@
 Feature: Extend Object APIs with advanced features
   # https://issues.liferay.com/browse/LPS-134171
 
-  Scenario: Nested fields in OneToOne relationship
-    Given two objects of two different types created
-    Given a relationship of type OneToOne between two objects created
-    When calling for object1 with object2 as nestedfields parameter
-    Then object1 information should be provided with an object2 information nested as an object
+  Background:
+    Given active object definitions created
+      | name     | en_US_label | en_US_plural_label | requiredStringField |
+      | Employee | Employee    | Employees          | firstname           |
+      | Manager  | Manager     | Managers           | firstname           |
+    Given a relationship between two object definitions created
+      | name        | supervisor |
+      | en_US_label | supervisor |
+      | type        | oneToMany  |
+      | object1name | Manager    |
+      | object2name | Employee   |
+
+  Scenario: Nested fields in oneToOne relationship
+    Given manager accounts created
+      | firstname |
+      | Alex      |
+      | Greta     |
+    Given employee accounts created
+      | firstname | supervisor |
+      | Jack      | Alex       |
+      | Otis      | Greta      |
+    When calling for "employees" with "manager" as nestedfields parameter
+    Then "employee" information should be provided with "manager" information nested as an object
+      | employee | manager |
+      | Jack     | Alex    |
+      | Otis     | Greta   |

@@ -4,6 +4,7 @@ package tests.model.headlessDelivery;
 import java.util.List;
 
 import lombok.Data;
+import tests.model.Creator;
 
 @Data
 public class BlogPostCreated {
