@@ -1,16 +1,12 @@
 package tests.model;
 
 import com.google.gson.Gson;
-import com.sun.deploy.net.MessageHeader;
 import io.restassured.http.Header;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import lombok.Data;
 import tests.model.remote_app_entry_service_impl.AppCreatorBody;
 import tests.utils.ConfigFileReader;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 public class BaseModel {

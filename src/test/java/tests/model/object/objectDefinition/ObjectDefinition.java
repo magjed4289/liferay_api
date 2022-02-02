@@ -13,7 +13,7 @@ public class ObjectDefinition {
     public Boolean active;
     public Label label;
     public String name;
-    public List<ObjectField> objectFields = null;
+    public List<ObjectField> objectFields;
     public Label pluralLabel;
     public Boolean portlet;
     public String scope;

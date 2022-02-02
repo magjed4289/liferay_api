@@ -19,15 +19,13 @@ public class ObjectRelationshipSteps {
     private final ObjectDefinitionEndpoints objectDefinitionEndpoints;
     private final Gson gson = new Gson();
     private final List<String> objectsIdsList;
-    private final List<String> relationshipIdsList;
     private final List<String> relationshipNamesList;
 
-    public ObjectRelationshipSteps(BaseModel baseModel, ObjectDefinitionSteps objectDefinitionSteps, ObjectDefinitionEndpoints objectDefinitionEndpoints) {
+    public ObjectRelationshipSteps(BaseModel baseModel, ObjectDefinitionSteps objectDefinitionSteps) {
         this.baseModel = baseModel;
         this.objectRelationshipEndpoints = new ObjectRelationshipEndopoints();
         this.objectDefinitionEndpoints = new ObjectDefinitionEndpoints();
         this.objectsIdsList = objectDefinitionSteps.objectIdsList;
-        this.relationshipIdsList = new ArrayList<>();
         this.relationshipNamesList = new ArrayList<>();
     }
 
@@ -44,37 +42,39 @@ public class ObjectRelationshipSteps {
                 object2id = objectID;
             }
         }
-        Label labelRelationship = Label.builder()
-                .en_US(data.get("en_US_label"))
-                .build();
         assert object2id != null;
         baseModel.setResponse(objectRelationshipEndpoints.getObjectRelationships(object1id));
         ObjectRelationships objectRelationships = gson.fromJson(baseModel.getResponse().asString(), ObjectRelationships.class);
         if (objectRelationships.getItems().size() > 0) {
             for (int i = 0; i < objectRelationships.getItems().size(); i++) {
-                String relationshipName = objectRelationships.getItems().get(i).getName();
-                relationshipNamesList.add(relationshipName);
+                relationshipNamesList.add(objectRelationships.getItems().get(i).getName());
             }
         }
         if (relationshipNamesList.isEmpty() || !relationshipNamesList.contains(data.get("name"))) {
-            ObjectRelationshipData objectRelationshipData = ObjectRelationshipData.builder()
-                    .deletionType("cascade")
-                    .name(data.get("name"))
-                    .label(labelRelationship)
-                    .type(data.get("type"))
-                    .objectDefinitionId2(Integer.valueOf(object2id))
-                    .build();
-            baseModel.setResponse(objectRelationshipEndpoints.createObjectRelationship(object1id, objectRelationshipData));
-            String relationshipId = baseModel.getResponse().then().extract().path("id").toString();
-            relationshipIdsList.add(relationshipId);
+            baseModel.setResponse(objectRelationshipEndpoints.createObjectRelationship(
+                    object1id,
+                    getObjectRelationshipData(
+                            data,
+                            object2id
+                    )
+            ));
             baseModel.checkResponseCode(200);
-        } else {
-            for (int i = 0; i < objectRelationships.getItems().size(); i++) {
-                if(objectRelationships.getItems().get(i).getName().equals(data.get("name"))){
-                    String relationshipId = String.valueOf(objectRelationships.getItems().get(i).getId());
-                    relationshipIdsList.add(relationshipId);
-                }
-            }
         }
+    }
+
+    private ObjectRelationshipData getObjectRelationshipData(Map<String, String> data, String object2id) {
+        return ObjectRelationshipData.builder()
+                .deletionType("cascade")
+                .name(data.get("name"))
+                .label(getLabel(data))
+                .type(data.get("type"))
+                .objectDefinitionId2(Integer.valueOf(object2id))
+                .build();
+    }
+
+    private Label getLabel(Map<String, String> data) {
+        return Label.builder()
+                .en_US(data.get("en_US_label"))
+                .build();
     }
 }

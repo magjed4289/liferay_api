@@ -1,7 +1,6 @@
 package tests.model.object.objectRelationship;
 
 import io.restassured.response.Response;
-import tests.model.object.objectDefinition.ObjectDefinition;
 import tests.utils.ConfigFileReader;
 
 import static io.restassured.RestAssured.given;
@@ -17,7 +16,7 @@ public class ObjectRelationshipEndopoints {
         return given()
                 .auth()
                 .preemptive()
-                .basic(config.getConfiguracion().getEmail(), config.getConfiguracion().getPassword())
+                .basic(config.getConfiguration().getEmail(), config.getConfiguration().getPassword())
                 .header("Accept", "application/json")
                 .header("Content-Type", "application/json")
                 .body(objectRelationshipData)
@@ -29,7 +28,7 @@ public class ObjectRelationshipEndopoints {
         return given()
                 .auth()
                 .preemptive()
-                .basic(config.getConfiguracion().getEmail(), config.getConfiguracion().getPassword())
+                .basic(config.getConfiguration().getEmail(), config.getConfiguration().getPassword())
                 .header("Accept", "application/json")
                 .header("Content-Type", "application/json")
                 .when()
@@ -40,7 +39,7 @@ public class ObjectRelationshipEndopoints {
         return given()
                 .auth()
                 .preemptive()
-                .basic(config.getConfiguracion().getEmail(), config.getConfiguracion().getPassword())
+                .basic(config.getConfiguration().getEmail(), config.getConfiguration().getPassword())
                 .header("Accept", "application/json")
                 .header("Content-Type", "application/json")
                 .when()

@@ -10,7 +10,7 @@ public class RemoteAppEndpoints {
 
     private final ConfigFileReader config = ConfigFileReader.getInstance();
 
-    private final String remoteAppEntry = config.getConfiguracion().getJsnows()+"/remoteapp.remoteappentry";
+    private final String remoteAppEntry = config.getConfiguration().getJsnows()+"/remoteapp.remoteappentry";
 
     private RemoteAppEntryModel remoteAppEntryModel;
 
@@ -21,7 +21,7 @@ public class RemoteAppEndpoints {
         return given()
                 .auth()
                 .preemptive()
-                .basic(config.getConfiguracion().getEmail(), config.getConfiguracion().getPassword())
+                .basic(config.getConfiguration().getEmail(), config.getConfiguration().getPassword())
                 .param("description", "")
                 .param("friendlyURLMapping", "")
                 .param("iFrameURL", appCreatorBody.getIFrameURL())
@@ -39,7 +39,7 @@ public class RemoteAppEndpoints {
                 given()
                         .auth()
                         .preemptive()
-                        .basic(config.getConfiguracion().getEmail(), config.getConfiguracion().getPassword())
+                        .basic(config.getConfiguration().getEmail(), config.getConfiguration().getPassword())
                         .pathParam("remoteAppEntryId", "42474")
                         .when()
                         .get(remoteAppEntry+"/get-remote-app-entry/remote-app-entry-id/{remoteAppEntryId}");

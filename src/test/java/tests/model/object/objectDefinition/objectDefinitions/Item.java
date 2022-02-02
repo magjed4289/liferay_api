@@ -1,10 +1,12 @@
 
-package tests.model.object.objectDefinition;
+package tests.model.object.objectDefinition.objectDefinitions;
 
 import lombok.Builder;
 import lombok.Data;
-import tests.model.object.Label;
 import tests.model.object.Actions;
+import tests.model.object.Label;
+import tests.model.object.objectDefinition.ObjectField;
+import tests.model.object.objectDefinition.Status;
 
 import java.util.List;
 

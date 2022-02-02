@@ -1,13 +1,13 @@
 
-package tests.model.object.objectDefinition.employeesWithNestedManager;
+package tests.model.object.objectDefinition;
 
 import lombok.Data;
 import tests.model.Creator;
 import tests.model.object.Actions;
-import tests.model.object.objectDefinition.Status;
+import tests.model.object.objectDefinition.employeesWithNestedFields.Manager;
 
 @Data
-public class Item {
+public class ItemManager {
 
     public Actions actions;
     public Creator creator;

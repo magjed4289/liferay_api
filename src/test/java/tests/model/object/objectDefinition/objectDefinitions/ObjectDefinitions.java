@@ -1,9 +1,8 @@
 
-package tests.model.object.objectDefinition;
+package tests.model.object.objectDefinition.objectDefinitions;
 
 import lombok.Data;
 import tests.model.object.Actions;
-
 
 import java.util.List;
 

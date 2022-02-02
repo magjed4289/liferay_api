@@ -27,7 +27,7 @@ public class ConfigFileReader {
 			properties.load(reader);
 			reader.close();
 		} catch (Exception e) {
-			log.info("El archivo no existe o la ruta es errónea " + e.getMessage());
+			log.info("The file does not exist or the path is incorrect " + e.getMessage());
 		}
 
 	}
@@ -36,7 +36,7 @@ public class ConfigFileReader {
 		return configFileReader == null ? configFileReader = new ConfigFileReader() : configFileReader;
 	}
 
-	public TestConfig getConfiguracion() {
+	public TestConfig getConfiguration() {
 
 		Map<String, String> map = new HashMap<>();
 		TestConfig bean = new TestConfig();

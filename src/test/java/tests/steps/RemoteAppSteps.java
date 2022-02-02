@@ -33,7 +33,7 @@ public class RemoteAppSteps {
     public void iMakeAValidCallToCreateARemoteAppAsIframe(Map<String, String> cucumberData) {
         entryData = cucumberData;
         String remoteAppName = cucumberData.get("nameMap");
-        Map<String, String> nameMap = new HashMap();
+        Map<String, String> nameMap = new HashMap<>();
         nameMap.put("en_US", remoteAppName);
         AppCreatorBody appCreatorBody = AppCreatorBody.builder()
                 .friendlyURLMapping(cucumberData.get("friendlyURLMapping"))

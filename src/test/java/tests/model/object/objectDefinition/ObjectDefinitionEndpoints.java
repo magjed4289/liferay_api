@@ -18,7 +18,7 @@ public class ObjectDefinitionEndpoints {
         return given()
                 .auth()
                 .preemptive()
-                .basic(config.getConfiguracion().getEmail(), config.getConfiguracion().getPassword())
+                .basic(config.getConfiguration().getEmail(), config.getConfiguration().getPassword())
                 .header("Accept", "application/json")
                 .header("Content-Type", "application/json")
                 .body(objectDefinition)
@@ -29,7 +29,7 @@ public class ObjectDefinitionEndpoints {
         return given()
                 .auth()
                 .preemptive()
-                .basic(config.getConfiguracion().getEmail(), config.getConfiguracion().getPassword())
+                .basic(config.getConfiguration().getEmail(), config.getConfiguration().getPassword())
                 .header("Accept", "application/json")
                 .header("Content-Type", "application/json")
                 .when()
@@ -40,29 +40,40 @@ public class ObjectDefinitionEndpoints {
         return given()
                 .auth()
                 .preemptive()
-                .basic(config.getConfiguracion().getEmail(), config.getConfiguracion().getPassword())
+                .basic(config.getConfiguration().getEmail(), config.getConfiguration().getPassword())
                 .header("Accept", "application/json")
                 .header("Content-Type", "application/json")
                 .when()
                 .get(objectUri +"/object-definitions/"+id);
     }
 
-    public Response getObjectWithNestedField(String employees, String manager) {
+    public Response getEmployeesWithNestedField(String manager) {
         return given()
                 .auth()
                 .preemptive()
-                .basic(config.getConfiguracion().getEmail(), config.getConfiguracion().getPassword())
+                .basic(config.getConfiguration().getEmail(), config.getConfiguration().getPassword())
                 .header("Accept", "application/json")
                 .header("Content-Type", "application/json")
                 .when()
-                .get("o/c/"+employees+"/?nestedFields="+manager);
+                .get("o/c/employees/?nestedFields="+manager);
+    }
+
+    public Response getEmployeesWithAggregationTerm(String aggregationTerm) {
+        return given()
+                .auth()
+                .preemptive()
+                .basic(config.getConfiguration().getEmail(), config.getConfiguration().getPassword())
+                .header("Accept", "application/json")
+                .header("Content-Type", "application/json")
+                .when()
+                .get("o/c/employees/?aggregationTerms="+aggregationTerm);
     }
 
     public Response createManager(Manager manager) {
         return given()
                 .auth()
                 .preemptive()
-                .basic(config.getConfiguracion().getEmail(), config.getConfiguracion().getPassword())
+                .basic(config.getConfiguration().getEmail(), config.getConfiguration().getPassword())
                 .header("Accept", "application/json")
                 .header("Content-Type", "application/json")
                 .when()
@@ -74,18 +85,29 @@ public class ObjectDefinitionEndpoints {
         return given()
                 .auth()
                 .preemptive()
-                .basic(config.getConfiguracion().getEmail(), config.getConfiguracion().getPassword())
+                .basic(config.getConfiguration().getEmail(), config.getConfiguration().getPassword())
                 .header("Accept", "application/json")
                 .header("Content-Type", "application/json")
                 .when()
                 .get("o/c/managers/"+managerId);
     }
 
+    public Response getEmployee(String employeeId) {
+        return given()
+                .auth()
+                .preemptive()
+                .basic(config.getConfiguration().getEmail(), config.getConfiguration().getPassword())
+                .header("Accept", "application/json")
+                .header("Content-Type", "application/json")
+                .when()
+                .get("o/c/managers/"+employeeId);
+    }
+
     public Response createEmployee(Employee employee) {
         return given()
                 .auth()
                 .preemptive()
-                .basic(config.getConfiguracion().getEmail(), config.getConfiguracion().getPassword())
+                .basic(config.getConfiguration().getEmail(), config.getConfiguration().getPassword())
                 .header("Accept", "application/json")
                 .header("Content-Type", "application/json")
                 .when()
@@ -93,11 +115,23 @@ public class ObjectDefinitionEndpoints {
                 .post("o/c/employees");
     }
 
+    public Response updateEmployee(Employee employee, String employeeId) {
+        return given()
+                .auth()
+                .preemptive()
+                .basic(config.getConfiguration().getEmail(), config.getConfiguration().getPassword())
+                .header("Accept", "application/json")
+                .header("Content-Type", "application/json")
+                .when()
+                .body(employee)
+                .put("o/c/employees/"+employeeId);
+    }
+
     public Response getObjectDefinitions() {
         return given()
                 .auth()
                 .preemptive()
-                .basic(config.getConfiguracion().getEmail(), config.getConfiguracion().getPassword())
+                .basic(config.getConfiguration().getEmail(), config.getConfiguration().getPassword())
                 .header("Accept", "application/json")
                 .header("Content-Type", "application/json")
                 .when()
@@ -108,7 +142,7 @@ public class ObjectDefinitionEndpoints {
         return given()
                 .auth()
                 .preemptive()
-                .basic(config.getConfiguracion().getEmail(), config.getConfiguracion().getPassword())
+                .basic(config.getConfiguration().getEmail(), config.getConfiguration().getPassword())
                 .header("Accept", "application/json")
                 .header("Content-Type", "application/json")
                 .when()
@@ -119,10 +153,10 @@ public class ObjectDefinitionEndpoints {
         return given()
                 .auth()
                 .preemptive()
-                .basic(config.getConfiguracion().getEmail(), config.getConfiguracion().getPassword())
+                .basic(config.getConfiguration().getEmail(), config.getConfiguration().getPassword())
                 .header("Accept", "application/json")
                 .header("Content-Type", "application/json")
                 .when()
-                .post("o/c/employees/"+employeeId);
+                .delete("o/c/employees/"+employeeId);
     }
 }
