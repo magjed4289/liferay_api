@@ -17,10 +17,10 @@ public class BlogPostingEndpoints {
         return given()
                 .auth()
                 .preemptive()
-                .basic(config.getConfiguracion().getEmail(), config.getConfiguracion().getPassword())
+                .basic(config.getConfiguration().getEmail(), config.getConfiguration().getPassword())
                 .header("Accept", "application/json")
                 .header("Content-Type", "application/json")
-                .pathParam("siteId", config.getConfiguracion().getSiteId())
+                .pathParam("siteId", config.getConfiguration().getSiteId())
                 .body(blogPostCreator)
                 .when()
                 .post("/o/headless-delivery/v1.0/sites/{siteId}/blog-postings");

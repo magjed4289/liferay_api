@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import tests.model.BaseModel;
-import tests.model.headlessDelivery.blog_post_created.BlogPostCreated;
+import tests.model.headlessDelivery.BlogPostCreated;
 import tests.model.headlessDelivery.blogPosting.BlogPostCreator;
 import tests.model.headlessDelivery.blogPosting.BlogPostingEndpoints;
 
@@ -15,13 +15,13 @@ import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-public class BlogStepDefs {
+public class BlogSteps {
     private final BaseModel baseModel;
     private final BlogPostingEndpoints blogPostingEndpoints;
     private final Gson gson = new Gson();
     private Map<String, String> entryData = new HashMap<>();
 
-    public BlogStepDefs(BaseModel baseModel) {
+    public BlogSteps(BaseModel baseModel) {
         this.baseModel = baseModel;
         this.blogPostingEndpoints = new BlogPostingEndpoints();
     }
