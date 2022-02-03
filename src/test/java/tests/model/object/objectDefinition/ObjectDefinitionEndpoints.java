@@ -100,7 +100,7 @@ public class ObjectDefinitionEndpoints {
                 .header("Accept", "application/json")
                 .header("Content-Type", "application/json")
                 .when()
-                .get("o/c/managers/"+employeeId);
+                .get("o/c/employees/"+employeeId);
     }
 
     public Response createEmployee(Employee employee) {

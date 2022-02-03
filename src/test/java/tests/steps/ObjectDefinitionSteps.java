@@ -104,7 +104,7 @@ public class ObjectDefinitionSteps {
                 String objectId = baseModel.getResponse().then().extract().path("id").toString();
                 String createdObjectName = baseModel.getResponse().then().extract().path("name").toString();
                 baseModel.setResponse(objectDefinitionEndpoints.publishObjectDefinition(objectId));
-                baseModel.checkResponseCode(200);
+                baseModel.checkResponseCode(204);
                 objectIdsList.add(objectId);
                 objectNamesList.add(createdObjectName);
             }
