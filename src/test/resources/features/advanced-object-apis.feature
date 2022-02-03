@@ -1,3 +1,4 @@
+@advanced-object-apis
 Feature: Extend Object APIs with advanced features
   # https://issues.liferay.com/browse/LPS-134171
 
