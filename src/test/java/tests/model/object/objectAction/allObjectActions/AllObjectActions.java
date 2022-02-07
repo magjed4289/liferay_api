@@ -1,6 +1,7 @@
 
 package tests.model.object.objectAction.allObjectActions;
 
+import lombok.Builder;
 import lombok.Data;
 import tests.model.object.Actions;
 

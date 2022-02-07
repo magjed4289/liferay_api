@@ -1,47 +1,52 @@
-package tests.utils;
+package tests.model.object.objectAction;
 
 import io.restassured.response.Response;
-import tests.model.object.objectAction.ObjectActionCreator;
+import tests.utils.ConfigFileReader;
 
 import java.io.*;
 import java.net.ServerSocket;
 
-public class Socket {
-    ServerSocket serverSocket;
+import static io.restassured.RestAssured.given;
 
-    public Socket() {
+public class ObjectActionEndpoints {
+
+    public ObjectActionEndpoints() {
     }
 
-    public ServerSocket createServerSocket(int port) throws IOException {
-        serverSocket = new ServerSocket(port);
-        return serverSocket;
-    }
-
-    public java.net.Socket socket(ServerSocket serverSocket) throws IOException {
-        return serverSocket.accept();
-    }
-
-    public String checkTheOutputOfWebhookCreated(){
-        java.net.Socket echoSocket;
-        BufferedReader in;
-        String outputMessage = null;
-        try {
-            echoSocket = socket(createServerSocket(8888));
-            in =
-                    new BufferedReader(
-                            new InputStreamReader(echoSocket.getInputStream()));
-            char[] buffer = new char[1000];
-            int output = in.read(buffer, 0, 1000);
-            outputMessage = new String(buffer, 0, output);
-            in.close();
-            echoSocket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return outputMessage;
-    }
+    private final ConfigFileReader config = ConfigFileReader.getInstance();
+    private final String objectUri = "/o/object-admin/v1.0";
 
     public Response postObjectDefinitionObjectAction(ObjectActionCreator objectActionCreator, Integer objectId) {
-        
+        return given()
+                .auth()
+                .preemptive()
+                .basic(config.getConfiguration().getEmail(), config.getConfiguration().getPassword())
+                .header("Accept", "application/json")
+                .header("Content-Type", "application/json")
+                .body(objectActionCreator)
+                .when()
+                .post(objectUri +"/object-definitions/"+objectId+"/object-actions");
+    }
+
+    public Response getDefinitionObjectActions(Integer objectId) {
+        return given()
+                .auth()
+                .preemptive()
+                .basic(config.getConfiguration().getEmail(), config.getConfiguration().getPassword())
+                .header("Accept", "application/json")
+                .header("Content-Type", "application/json")
+                .when()
+                .get(objectUri +"/object-definitions/"+objectId+"/object-actions");
+    }
+
+    public Response deleteObjectAction(Integer objectId) {
+        return given()
+                .auth()
+                .preemptive()
+                .basic(config.getConfiguration().getEmail(), config.getConfiguration().getPassword())
+                .header("Accept", "application/json")
+                .header("Content-Type", "application/json")
+                .when()
+                .delete(objectUri +"/object-actions/"+objectId);
     }
 }

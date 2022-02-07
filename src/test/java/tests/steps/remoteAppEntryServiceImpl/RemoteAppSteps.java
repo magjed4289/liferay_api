@@ -1,4 +1,4 @@
-package tests.steps;
+package tests.steps.remoteAppEntryServiceImpl;
 
 import com.google.gson.Gson;
 import io.cucumber.java.en.Then;

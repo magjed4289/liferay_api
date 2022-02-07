@@ -1,4 +1,4 @@
-package tests.steps;
+package tests.steps.object;
 
 import com.google.gson.Gson;
 import io.cucumber.datatable.DataTable;
@@ -56,12 +56,12 @@ public class ObjectDefinitionSteps {
     public void cleanUp() {
         if (!managersIdsList.isEmpty()) {
             for (String managerId : managersIdsList) {
-                //baseModel.setResponse(objectDefinitionEndpoints.deleteManager(managerId));
+                baseModel.setResponse(objectDefinitionEndpoints.deleteManager(managerId));
             }
         }
         if (!employeesIdsList.isEmpty()) {
             for (String employeeId : employeesIdsList) {
-                //baseModel.setResponse(objectDefinitionEndpoints.deleteEmployee(employeeId));
+                baseModel.setResponse(objectDefinitionEndpoints.deleteEmployee(employeeId));
             }
         }
     }
@@ -82,7 +82,7 @@ public class ObjectDefinitionSteps {
     }
 
     private void checkForAlreadyCreatedObjectDefinitions() {
-        ObjectDefinitions objectDefinitions = gson.fromJson(baseModel.getResponse().asString(), ObjectDefinitions.class);
+        ObjectDefinitions objectDefinitions = getObjectDefinitions();
         for (int i = 0; i < objectDefinitions.getItems().size(); i++) {
             objectNamesList.add(objectDefinitions.getItems().get(i).getName());
             objectIdsList.add(objectDefinitions.getItems().get(i).getId().toString());
@@ -133,6 +133,11 @@ public class ObjectDefinitionSteps {
         return Label.builder()
                 .en_US(label)
                 .build();
+    }
+
+    private ObjectDefinitions getObjectDefinitions() {
+        baseModel.setResponse(objectDefinitionEndpoints.getObjectDefinitions());
+        return gson.fromJson(baseModel.getResponse().asString(), ObjectDefinitions.class);
     }
 
     private ObjectField objectField(Label labelField, ObjectDefinitionData objectDefinitionData) {
@@ -290,5 +295,13 @@ public class ObjectDefinitionSteps {
         } else {
             Assert.fail("There's more items in the employees objects than in the table!");
         }
+    }
+
+    @Given("a site with {string} object defined")
+    public void aSiteWithCommerceOrderObjectDefined(String objectName) {
+        baseModel.setResponse(objectDefinitionEndpoints.getObjectDefinitions());
+        baseModel.checkResponseCode(200);
+        checkForAlreadyCreatedObjectDefinitions();
+        Assert.assertTrue(objectNamesList.contains(objectName));
     }
 }

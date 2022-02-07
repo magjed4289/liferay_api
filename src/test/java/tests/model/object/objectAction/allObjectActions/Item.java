@@ -1,14 +1,19 @@
 
 package tests.model.object.objectAction.allObjectActions;
 
+import lombok.Builder;
+import lombok.Data;
+import tests.model.object.Actions;
+import tests.model.object.objectAction.Parameters;
+
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Generated;
 
-@Generated("jsonschema2pojo")
+@Data
 public class Item {
 
-    public Actions__1 actions;
+    public Actions actions;
     public Boolean active;
     public String dateCreated;
     public String dateModified;
@@ -17,14 +22,4 @@ public class Item {
     public String objectActionExecutorKey;
     public String objectActionTriggerKey;
     public Parameters parameters;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
-
 }

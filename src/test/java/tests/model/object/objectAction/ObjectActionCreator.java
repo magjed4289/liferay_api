@@ -1,4 +1,4 @@
-package tests.steps.object;
+package tests.model.object.objectAction;
 
 import lombok.Builder;
 import lombok.Data;
@@ -11,14 +11,4 @@ public class ObjectActionCreator {
     public String objectActionExecutorKey;
     public String objectActionTriggerKey;
     public Parameters parameters;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
-
 }
