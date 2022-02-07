@@ -56,12 +56,12 @@ public class ObjectDefinitionSteps {
     public void cleanUp() {
         if (!managersIdsList.isEmpty()) {
             for (String managerId : managersIdsList) {
-                baseModel.setResponse(objectDefinitionEndpoints.deleteManager(managerId));
+                //baseModel.setResponse(objectDefinitionEndpoints.deleteManager(managerId));
             }
         }
         if (!employeesIdsList.isEmpty()) {
             for (String employeeId : employeesIdsList) {
-                baseModel.setResponse(objectDefinitionEndpoints.deleteEmployee(employeeId));
+                //baseModel.setResponse(objectDefinitionEndpoints.deleteEmployee(employeeId));
             }
         }
     }
