@@ -1,4 +1,4 @@
-package tests.steps;
+package tests.steps.object;
 
 import com.google.gson.Gson;
 import io.cucumber.java.en.Given;

@@ -1,12 +1,12 @@
-package tests.steps;
+package tests.steps.remoteAppEntryServiceImpl;
 
 import com.google.gson.Gson;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import tests.model.BaseModel;
-import tests.model.remote_app_entry_service_impl.AppCreatorBody;
-import tests.model.remote_app_entry_service_impl.RemoteAppCreated;
-import tests.model.remote_app_entry_service_impl.RemoteAppEndpoints;
+import tests.model.remoteAppEntryServiceImpl.AppCreatorBody;
+import tests.model.remoteAppEntryServiceImpl.RemoteAppCreated;
+import tests.model.remoteAppEntryServiceImpl.RemoteAppEndpoints;
 
 
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package tests.steps;
+package tests.steps.object;
 
 import tests.model.object.objectDefinition.aggregationTermsData.AggregationTermsData;
 import tests.model.object.objectDefinition.customObjects.EmployeeData;
