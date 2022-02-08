@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.After;
 import io.cucumber.java.en.And;
-import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
@@ -12,31 +11,40 @@ import tests.model.BaseModel;
 import tests.model.object.objectAction.Parameters;
 import tests.model.object.objectAction.ObjectActionCreator;
 import tests.model.object.objectAction.allObjectActions.AllObjectActions;
+import tests.model.object.objectAction.payload.PayloadCustomObject;
+import tests.model.object.objectAction.payload.userAccountPayload.PayloadUserAccountUpdated;
 import tests.model.object.objectDefinition.ObjectDefinitionEndpoints;
 import tests.model.object.objectDefinition.objectDefinitions.ObjectDefinitions;
 import tests.model.object.objectAction.ObjectActionEndpoints;
+import tests.steps.headlessAdminUser.HeadlessAdminUserSteps;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
+import java.util.Map;
 
 
 public class ObjectActionSteps {
     public final ObjectActionEndpoints objectActionEndpoints;
     public final ObjectDefinitionEndpoints objectDefinitionEndpoints;
     public final ObjectDefinitionSteps objectDefinitionSteps;
+    public final HeadlessAdminUserSteps headlessAdminUserSteps;
+
 
     public final BaseModel baseModel;
     private final Gson gson = new Gson();
     ServerSocket serverSocket;
+    public String outputResponse = null;
+    public String definedURL = null;
 
 
-    public ObjectActionSteps(ObjectActionEndpoints objectActionEndpoints, ObjectDefinitionEndpoints objectDefinitionEndpoints, BaseModel baseModel, ObjectDefinitionSteps objectDefinitionSteps) {
+    public ObjectActionSteps(ObjectActionEndpoints objectActionEndpoints, ObjectDefinitionEndpoints objectDefinitionEndpoints, BaseModel baseModel, ObjectDefinitionSteps objectDefinitionSteps, HeadlessAdminUserSteps headlessAdminUserSteps) {
         this.objectActionEndpoints = objectActionEndpoints;
         this.baseModel = baseModel;
         this.objectDefinitionEndpoints = objectDefinitionEndpoints;
         this.objectDefinitionSteps = objectDefinitionSteps;
+        this.headlessAdminUserSteps = headlessAdminUserSteps;
     }
 
     @After()
@@ -56,13 +64,9 @@ public class ObjectActionSteps {
         return gson.fromJson(baseModel.getResponse().asString(), AllObjectActions.class);
     }
 
-    @Given("up the port")
-    public void upThePort() {
-
-    }
-
-    @And("a webhook {string} with url {string} for {string} created")
-    public void aWebhookWithUrlForCreated(String objectActionTriggerKey, String url, String objectName) {
+    @And("a webhook {string} with URL {string} for {string} created")
+    public void aWebhookWithURLForCreated(String objectActionTriggerKey, String url, String objectName) {
+        definedURL = url;
         ObjectDefinitions objectDefinitions = getObjectDefinitions();
         Integer objectId = null;
         for (int i = 0; i < objectDefinitions.getItems().size(); i++) {
@@ -107,47 +111,97 @@ public class ObjectActionSteps {
         return serverSocket.accept();
     }
 
-    public String checkTheOutputOfWebhookCreated(DataTable dataTable) {
-        final String[] outputMessage = new String[1];
-        Thread openThePortAndListen = new Thread(new Runnable() {
-            public void run() {
-                try {
-                    java.net.Socket echoSocket;
-                    BufferedReader in;
-                    echoSocket = socket(createServerSocket(8888));
-                    in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
-                    char[] buffer = new char[1000];
-                    int output = in.read(buffer, 0, 1000);
-                    outputMessage[0] = new String(buffer, 0, output);
-                    System.out.println("This is my message: " + outputMessage[0]);
-                    outputResponse= outputMessage[0];
-                    in.close();
-                    echoSocket.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+    private Thread getCreateManagerAccounts(DataTable dataTable) {
+        return new Thread(() -> objectDefinitionSteps.managerAccountsCreated(dataTable));
+    }
+
+    private Thread getDeleteManagerAccounts() {
+        return new Thread(() -> objectDefinitionSteps.deleteManagers());
+    }
+
+    private Thread getUpdateUserAccount(Map<String, String> cucumberData) {
+        return new Thread(() -> headlessAdminUserSteps.updateTheUser(cucumberData));
+    }
+
+    private Thread getOpenThePortAndListen() {
+        return new Thread(() -> {
+            try {
+                java.net.Socket echoSocket;
+                BufferedReader in;
+                echoSocket = socket(createServerSocket(Integer.parseInt(definedURL.substring(definedURL.length()-4))));
+                in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
+                char[] buffer = new char[3000];
+                int output = in.read(buffer, 0, 3000);
+                outputResponse = new String(buffer, 0, output);
+                in.close();
+                echoSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
         );
-        Thread createManagerAccounts = new Thread(new Runnable() {
-            public void run() {
-                objectDefinitionSteps.managerAccountsCreated(dataTable);
-            }
-        });
-        openThePortAndListen.start();
-        createManagerAccounts.start();
-        return outputMessage[0];
     }
 
-    public String outputResponse;
+    private void joinThread(Thread thread) {
+        for (; ; ) {
+            try {
+                thread.join(10000);
+                break;
+            } catch (InterruptedException e) {
+                // ignore
+            }
+        }
+    }
 
     @When("manager accounts created after setting up the webhook")
     public void managerAccountsCreatedAfterSettingUpTheWebhook(DataTable managers) {
-        outputResponse = checkTheOutputOfWebhookCreated(managers);
+        Thread openThePortAndListen = getOpenThePortAndListen();
+        Thread createManagerAccounts = getCreateManagerAccounts(managers);
+        openThePortAndListen.start();
+        createManagerAccounts.start();
+        joinThread(openThePortAndListen);
+        joinThread(createManagerAccounts);
     }
 
-    @Then("the information of the {string} is sent to the URL defined in the webhook")
-    public void theInformationOfTheIsSentToTheURLDefinedInTheWebhook(String customObject) {
-        System.out.println("This is the final step "+outputResponse);
+    @Then("the information is sent to the URL defined in the webhook")
+    public void theInformationIsSentToTheURLDefinedInTheWebhook() {
+        Assert.assertTrue(outputResponse.contains(definedURL));
+    }
+
+    @When("manager account deleted after setting up the webhook")
+    public void managerAccountDeletedAfterSettingUpTheWebhook() {
+        Thread openThePortAndListen = getOpenThePortAndListen();
+        Thread deleteManagerAccounts = getDeleteManagerAccounts();
+        openThePortAndListen.start();
+        deleteManagerAccounts.start();
+        joinThread(openThePortAndListen);
+        joinThread(deleteManagerAccounts);
+    }
+
+    @When("updating the user after setting up the webhook")
+    public void updatingTheUserAfterSettingUpTheWebhook(Map<String, String> cucumberData) {
+        Thread openThePortAndListen = getOpenThePortAndListen();
+        Thread updateTheUser = getUpdateUserAccount(cucumberData);
+        openThePortAndListen.start();
+        updateTheUser.start();
+        joinThread(openThePortAndListen);
+        joinThread(updateTheUser);
+    }
+
+    @Then("the payload is matching the JSON format defined for {string} in the Headless API")
+    public void thePayloadIsMatchingTheJSONFormatDefinedForInTheHeadlessAPI(String objectDefinitionType) {
+        switch (objectDefinitionType) {
+            case "userUpdate":
+                PayloadUserAccountUpdated payloadUserAccountUpdated = gson.fromJson(outputResponse.substring(outputResponse.indexOf("{")), PayloadUserAccountUpdated.class);
+                Assert.assertNotNull(payloadUserAccountUpdated.getModelUser());
+                Assert.assertNotNull(payloadUserAccountUpdated.getOriginalUser());
+                break;
+            case "managerDeletion":
+                PayloadCustomObject payloadCustomObject = gson.fromJson(outputResponse.substring(outputResponse.indexOf("{")), PayloadCustomObject.class);
+                Assert.assertNotNull(payloadCustomObject.getObjectEntry());
+                break;
+            default:
+                Assert.fail("no match");
+        }
     }
 }

@@ -5,7 +5,7 @@ import io.restassured.http.Header;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import lombok.Data;
-import tests.model.remote_app_entry_service_impl.AppCreatorBody;
+import tests.model.remoteAppEntryServiceImpl.AppCreatorBody;
 import tests.utils.ConfigFileReader;
 
 @Data

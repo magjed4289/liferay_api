@@ -1,14 +1,10 @@
 
 package tests.model.object.objectAction.allObjectActions;
 
-import lombok.Builder;
 import lombok.Data;
 import tests.model.object.Actions;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import javax.annotation.Generated;
 
 @Data
 public class AllObjectActions {

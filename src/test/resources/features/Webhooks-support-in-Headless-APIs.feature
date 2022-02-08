@@ -1,40 +1,39 @@
 Feature: Webhooks support in Objects API
   #https://issues.liferay.com/browse/LPS-98594
 
-  Background:
+  Scenario: On After Add webhook for Custom Object
     Given active object definitions created
       | name    | en_US_label | en_US_plural_label | requiredStringField |
       | Manager | Manager     | Managers           | firstname           |
-
-  Scenario: On After Add webhook for Custom Object
-    Given a webhook "onAfterAdd" with url "localhost:8888" for "Manager" created
+    Given a webhook "onAfterAdd" with URL "localhost:8888" for "Manager" created
     When manager accounts created after setting up the webhook
       | firstname |
-      | Carinek   |
-    Then the information of the "Manager" is sent to the URL defined in the webhook
+      | Anthony   |
+    Then the information is sent to the URL defined in the webhook
 
-# Given a site with User object defined
-# And a webhook "On After Update" for User
-# And a new user is created
-# When updating the user
-# Then the payload is matching the JSON format defined in the Headless API
+  Scenario: On After Update webhook for User
+    Given a site with "User" object defined
+    And a webhook "onAfterUpdate" with URL "localhost:7777" for "User" created
+    And a new user is created
+      | alternateName | myAlternateName1     |
+      | emailAddress  | user1@myusertest.com |
+      | givenName     | firstname            |
+      | familyName    | familyName           |
+    When updating the user after setting up the webhook
+      | alternateName        | myAlternateName1       |
+      | alternateNameUpdated | myAlternateNameUpdated |
+      | emailAddress         | user1@myusertest.com   |
+      | givenName            | firstname              |
+      | familyName           | familyName             |
+    Then  the payload is matching the JSON format defined for "userUpdate" in the Headless API
 
-# Given a site with Custom Object defined
-# And a webhook "On After Delete" for Custom Object
-# And a new custom object is created
-# When deleting the object
-# Then  the information of the object is sent to the URL defined in the webhook
-
-# Given a site with Custom Object defined
-# And a webhook "On After Delete" for Custom Object
-# And a custom objects is created
-# And a webhook "On After Delete" for Custom Object is deleted
-# When deleting one the object
-# Then the information of the object is NOT sent to the URL defined in the deleted webhook
-
-# Given ** a site with Custom Object defined
-# And a webhook "On After Delete" for Custom Object
-# And a custom objects is created
-# And a webhook "On After Delete" for Custom Object is updated
-# When deleting one the object
-# Then the information of the object is sent to the URL defined in the updated webhook
+  Scenario: On After Delete webhook for Custom Object
+    Given active object definitions created
+      | name    | en_US_label | en_US_plural_label | requiredStringField |
+      | Manager | Manager     | Managers           | firstname           |
+    And a webhook "onAfterDelete" with URL "localhost:5555" for "Manager" created
+    And manager accounts created
+      | firstname |
+      | Clarissa  |
+    When manager account deleted after setting up the webhook
+    Then  the payload is matching the JSON format defined for "managerDeletion" in the Headless API

@@ -3,9 +3,6 @@ package tests.model.object.objectAction;
 import io.restassured.response.Response;
 import tests.utils.ConfigFileReader;
 
-import java.io.*;
-import java.net.ServerSocket;
-
 import static io.restassured.RestAssured.given;
 
 public class ObjectActionEndpoints {

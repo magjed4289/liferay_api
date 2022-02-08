@@ -55,14 +55,20 @@ public class ObjectDefinitionSteps {
     @After
     public void cleanUp() {
         if (!managersIdsList.isEmpty()) {
-            for (String managerId : managersIdsList) {
-                baseModel.setResponse(objectDefinitionEndpoints.deleteManager(managerId));
-            }
+            deleteManagers();
         }
         if (!employeesIdsList.isEmpty()) {
-            for (String employeeId : employeesIdsList) {
-                baseModel.setResponse(objectDefinitionEndpoints.deleteEmployee(employeeId));
-            }
+            deleteObjects(employeesIdsList);
+        }
+    }
+
+    public void deleteManagers() {
+        deleteObjects(managersIdsList);
+    }
+
+    private void deleteObjects(List<String> objectIdsList) {
+        for (String objectId : objectIdsList) {
+            baseModel.setResponse(objectDefinitionEndpoints.deleteManager(objectId));
         }
     }
 
