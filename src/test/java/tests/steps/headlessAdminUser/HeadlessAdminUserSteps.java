@@ -51,7 +51,6 @@ public class HeadlessAdminUserSteps {
                 .familyName(cucumberData.get("familyName"))
                 .build();
         baseModel.setResponse(headlessAdminUserEndpoints.createUserAccount(accountId,userAccount));
-        System.out.println(baseModel.getResponse().prettyPrint());
         baseModel.checkResponseCode(200);
         userAccountsIdsList.add(baseModel.getResponse().then().extract().path("id").toString());
     }
@@ -64,7 +63,6 @@ public class HeadlessAdminUserSteps {
                 .familyName(cucumberData.get("familyName"))
                 .build();
         baseModel.setResponse(headlessAdminUserEndpoints.updateUserAccount(userAccountsIdsList.get(0),userAccount));
-        System.out.println(baseModel.getResponse().prettyPrint());
         baseModel.checkResponseCode(200);
     }
 }
