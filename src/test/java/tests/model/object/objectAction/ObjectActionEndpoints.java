@@ -25,6 +25,18 @@ public class ObjectActionEndpoints {
                 .post(objectUri +"/object-definitions/"+objectId+"/object-actions");
     }
 
+    public Response updateObjectDefinitionObjectAction(ObjectActionCreator objectActionCreator, String objectActionId) {
+        return given()
+                .auth()
+                .preemptive()
+                .basic(config.getConfiguration().getEmail(), config.getConfiguration().getPassword())
+                .header("Accept", "application/json")
+                .header("Content-Type", "application/json")
+                .body(objectActionCreator)
+                .when()
+                .put(objectUri +"/object-actions/"+objectActionId);
+    }
+
     public Response getDefinitionObjectActions(Integer objectId) {
         return given()
                 .auth()
@@ -36,7 +48,7 @@ public class ObjectActionEndpoints {
                 .get(objectUri +"/object-definitions/"+objectId+"/object-actions");
     }
 
-    public Response deleteObjectAction(Integer objectId) {
+    public Response deleteObjectAction(String objectId) {
         return given()
                 .auth()
                 .preemptive()
