@@ -9,7 +9,7 @@ Feature: Webhooks support in Objects API
     When manager accounts created after setting up the webhook
       | firstname |
       | Anthony   |
-    Then the information is sent to the URL defined in the webhook
+    Then the information is sent to the URL "localhost:8888" defined in the webhook
 
   Scenario: On After Update webhook for User
     Given a site with "User" object defined
@@ -37,3 +37,51 @@ Feature: Webhooks support in Objects API
       | Clarissa  |
     When manager account deleted after setting up the webhook
     Then  the payload is matching the JSON format defined for "managerDeletion" in the Headless API
+
+  Scenario: On After Add webhook for Custom Object Updated
+    Given active object definitions created
+      | name    | en_US_label | en_US_plural_label | requiredStringField |
+      | Manager | Manager     | Managers           | firstname           |
+    Given a webhook "onAfterAdd" with URL "localhost:8888" for "Manager" created
+    When the URL in the webhook "onAfterAdd" for "Manager" updated to "localhost:3210"
+    And manager accounts created after setting up the webhook
+      | firstname |
+      | Anthony   |
+    Then the information is sent to the URL "localhost:3210" defined in the webhook
+
+  Scenario: On After Add webhook for Custom Object deleted
+    Given active object definitions created
+      | name    | en_US_label | en_US_plural_label | requiredStringField |
+      | Manager | Manager     | Managers           | firstname           |
+    Given a webhook "onAfterAdd" with URL "localhost:5432" for "Manager" created
+    And a webhook deleted
+    When manager accounts created after setting up the webhook
+      | firstname |
+      | Anthony   |
+    Then the information is not sent to the URL defined in the webhook
+
+  Scenario: External model of On After Add webhook for Custom Object
+    Given active object definitions created
+      | name    | en_US_label | en_US_plural_label | requiredStringField |
+      | Manager | Manager     | Managers           | firstname           |
+    And a webhook "onAfterAdd" with URL "localhost:7878" for "Manager" created
+    When manager accounts created after setting up the webhook
+      | firstname |
+      |           |
+      | Anthony   |
+      |           |
+      |           |
+      |           |
+      |           |
+      |           |
+    Then the payload is matching the JSON format defined for "managerExternalModel" in the Headless API
+
+  Scenario: External model of On After Add webhook for User
+    Given a site with "User" object defined
+    And a webhook "onAfterAdd" with URL "localhost:9697" for "User" created
+    When a new user is created
+      | alternateName | myAlternateName1     |
+      | emailAddress  | user1@myusertest.com |
+      | givenName     | firstname            |
+      | familyName    | familyName           |
+    Then the payload is matching the JSON format defined for "userExternalModel" in the Headless API

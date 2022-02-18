@@ -64,7 +64,7 @@ task cucumber() {
                     '--plugin', 'html:target/cucumber-report.html',
                     '--plugin', 'json:target/cucumber-reports/cucumber.json',
                     '--plugin', 'junit:target/cucumber-reports/cucumber.xml',
-                    '--tags', "${tags}",
+                    //'--tags', "${tags}",
                     '--glue', 'tests.steps',
                     'src/test/resources/features']
         }

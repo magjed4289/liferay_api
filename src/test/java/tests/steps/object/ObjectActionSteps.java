@@ -37,6 +37,7 @@ public class ObjectActionSteps {
     ServerSocket serverSocket;
     public String outputResponse = null;
     public String definedURL = null;
+    public String actionId = null;
 
 
     public ObjectActionSteps(ObjectActionEndpoints objectActionEndpoints, ObjectDefinitionEndpoints objectDefinitionEndpoints, BaseModel baseModel, ObjectDefinitionSteps objectDefinitionSteps, HeadlessAdminUserSteps headlessAdminUserSteps) {
@@ -53,7 +54,7 @@ public class ObjectActionSteps {
         for (int i = 0; i < objectDefinitions.getItems().size(); i++) {
             AllObjectActions allObjectActions = getAllObjectActions(objectDefinitions.getItems().get(i).getId());
             for (int j = 0; j < allObjectActions.getItems().size(); j++) {
-                baseModel.setResponse(objectActionEndpoints.deleteObjectAction(allObjectActions.getItems().get(j).getId()));
+                baseModel.setResponse(objectActionEndpoints.deleteObjectAction(allObjectActions.getItems().get(j).getId().toString()));
                 baseModel.checkResponseCode(204);
             }
         }
@@ -79,6 +80,31 @@ public class ObjectActionSteps {
         ObjectActionCreator objectActionCreator = getObjectActionCreator(objectName, objectActionTriggerKey, parameters);
         baseModel.setResponse(objectActionEndpoints.postObjectDefinitionObjectAction(objectActionCreator, objectId));
         baseModel.checkResponseCode(200);
+        actionId = baseModel.getResponse().then().extract().path("id").toString();
+    }
+
+    @When("the URL in the webhook {string} for {string} updated to {string}")
+    public void theURLInTheWebhookForUpdatedTo(String objectActionTriggerKey, String objectName, String url) {
+        definedURL = url;
+        ObjectDefinitions objectDefinitions = getObjectDefinitions();
+        Integer objectId = null;
+        for (int i = 0; i < objectDefinitions.getItems().size(); i++) {
+            if (objectDefinitions.getItems().get(i).getName().equals(objectName)) {
+                objectId = objectDefinitions.getItems().get(i).getId();
+            }
+            assert objectId != null;
+        }
+        Parameters parameters = getParameters(url);
+        ObjectActionCreator objectActionCreator = getObjectActionCreator(objectName, objectActionTriggerKey, parameters);
+        baseModel.setResponse(objectActionEndpoints.updateObjectDefinitionObjectAction(objectActionCreator, actionId));
+        baseModel.checkResponseCode(200);
+        Assert.assertEquals(baseModel.getResponse().then().extract().path("parameters.url").toString(),url);
+    }
+
+    @And("a webhook deleted")
+    public void aWebhookWithURLForDeleted() {
+        baseModel.setResponse(objectActionEndpoints.deleteObjectAction(actionId));
+        baseModel.checkResponseCode(204);
     }
 
     private ObjectDefinitions getObjectDefinitions() {
@@ -116,7 +142,7 @@ public class ObjectActionSteps {
     }
 
     private Thread getDeleteManagerAccounts() {
-        return new Thread(() -> objectDefinitionSteps.deleteManagers());
+        return new Thread(objectDefinitionSteps::deleteManagers);
     }
 
     private Thread getUpdateUserAccount(Map<String, String> cucumberData) {
@@ -163,8 +189,8 @@ public class ObjectActionSteps {
         joinThread(createManagerAccounts);
     }
 
-    @Then("the information is sent to the URL defined in the webhook")
-    public void theInformationIsSentToTheURLDefinedInTheWebhook() {
+    @Then("the information is sent to the URL {string} defined in the webhook")
+    public void theInformationIsSentToTheURLDefinedInTheWebhook(String definedURL) {
         Assert.assertTrue(outputResponse.contains(definedURL));
     }
 
@@ -200,8 +226,19 @@ public class ObjectActionSteps {
                 PayloadCustomObject payloadCustomObject = gson.fromJson(outputResponse.substring(outputResponse.indexOf("{")), PayloadCustomObject.class);
                 Assert.assertNotNull(payloadCustomObject.getObjectEntry());
                 break;
+            case "managerExternalModel":
+                Assert.fail("fill in the step!");
+                break;
+            case "userExternalModel":
+                Assert.fail("fill in this step as well!");
+                break;
             default:
                 Assert.fail("no match");
         }
+    }
+
+    @Then("the information is not sent to the URL defined in the webhook")
+    public void theInformationIsNotSentToTheURLDefinedInTheWebhook() {
+        Assert.assertNull(outputResponse);
     }
 }
