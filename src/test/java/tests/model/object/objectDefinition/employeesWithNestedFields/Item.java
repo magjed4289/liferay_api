@@ -19,6 +19,6 @@ public class Item {
     public Integer id;
     public Status status;
     public String firstname;
-    public Manager manager;
-    public Integer managerId;
+    public Manager r_supervisor_c_manager;
+    public Integer r_supervisor_c_managerId;
 }

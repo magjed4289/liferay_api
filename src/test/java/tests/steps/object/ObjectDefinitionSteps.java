@@ -149,7 +149,7 @@ public class ObjectDefinitionSteps {
     private ObjectField objectField(Label labelField, ObjectDefinitionData objectDefinitionData) {
         return ObjectField.builder()
                 .DBType("String")
-                .businessType("Boolean")
+                .businessType("Text")
                 .indexed(true)
                 .indexedAsKeyword(true)
                 .label(labelField)
@@ -173,7 +173,7 @@ public class ObjectDefinitionSteps {
             if (employeesWithNestedFields.getItems().size() == objectDefinitionDataCatalog.getNestedObjectDataList().size()) {
                 for (int i = 0; i < employeesWithNestedFields.getItems().size(); i++) {
                     if (employeesWithNestedFields.getItems().get(i).getFirstname().equals(nestedObjectData.getEmployee())) {
-                        Assert.assertEquals(employeesWithNestedFields.getItems().get(i).getManager().getFirstname(), nestedObjectData.getManager());
+                        Assert.assertEquals(employeesWithNestedFields.getItems().get(i).getR_supervisor_c_manager().getFirstname(), nestedObjectData.getManager());
                     }
                 }
             } else {
