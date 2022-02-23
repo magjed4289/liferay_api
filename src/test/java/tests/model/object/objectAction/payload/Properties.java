@@ -4,7 +4,7 @@ package tests.model.object.objectAction.payload;
 import lombok.Data;
 
 @Data
-public class PropertiesManager {
+public class Properties {
 
     public String firstname;
 }

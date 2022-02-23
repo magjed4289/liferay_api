@@ -9,8 +9,8 @@ import tests.model.headlessAdminUser.UserAccount;
 import java.util.*;
 
 public class HeadlessAdminUserSteps {
-    BaseModel baseModel;
-    HeadlessAdminUserEndpoints headlessAdminUserEndpoints;
+    final BaseModel baseModel;
+    final HeadlessAdminUserEndpoints headlessAdminUserEndpoints;
     public final List<String> userAccountsIdsList;
     public final List<String> accountsIdsList;
 
@@ -57,7 +57,7 @@ public class HeadlessAdminUserSteps {
 
     public void updateTheUser(Map<String, String> cucumberData){
         UserAccount userAccount = UserAccount.builder()
-                .alternateName(cucumberData.get("alternateNameUpdated"))
+                .alternateName(cucumberData.get("alternateName"))
                 .emailAddress(cucumberData.get("emailAddress"))
                 .givenName(cucumberData.get("givenName"))
                 .familyName(cucumberData.get("familyName"))

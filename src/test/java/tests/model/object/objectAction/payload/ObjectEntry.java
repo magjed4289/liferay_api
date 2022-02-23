@@ -16,7 +16,7 @@ public class ObjectEntry {
     public Long dateModified;
     public String id;
     public Actions actions;
-    public PropertiesManager propertiesManager;
+    public Properties properties;
     public String externalReferenceCode;
     public Status status;
 }
