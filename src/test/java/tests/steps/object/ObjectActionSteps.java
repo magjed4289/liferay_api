@@ -12,6 +12,7 @@ import tests.model.object.objectAction.Parameters;
 import tests.model.object.objectAction.ObjectActionCreator;
 import tests.model.object.objectAction.allObjectActions.AllObjectActions;
 import tests.model.object.objectAction.payload.PayloadCustomObject;
+import tests.model.object.objectAction.payload.userAccountPayload.PayloadUserAccountCreated;
 import tests.model.object.objectAction.payload.userAccountPayload.PayloadUserAccountUpdated;
 import tests.model.object.objectDefinition.ObjectDefinitionEndpoints;
 import tests.model.object.objectDefinition.objectDefinitions.ObjectDefinitions;
@@ -23,6 +24,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.util.Map;
+
+import static junit.framework.TestCase.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 
 public class ObjectActionSteps {
@@ -58,6 +62,11 @@ public class ObjectActionSteps {
                 baseModel.checkResponseCode(204);
             }
         }
+    }
+
+    @After()
+    public void deleteAccountsAndUserAccounts(){
+        headlessAdminUserSteps.deleteAccountsAndUserAccounts();
     }
 
     private AllObjectActions getAllObjectActions(Integer objectId) {
@@ -98,7 +107,7 @@ public class ObjectActionSteps {
         ObjectActionCreator objectActionCreator = getObjectActionCreator(objectName, objectActionTriggerKey, parameters);
         baseModel.setResponse(objectActionEndpoints.updateObjectDefinitionObjectAction(objectActionCreator, actionId));
         baseModel.checkResponseCode(200);
-        Assert.assertEquals(baseModel.getResponse().then().extract().path("parameters.url").toString(),url);
+        Assert.assertEquals(baseModel.getResponse().then().extract().path("parameters.url").toString(), url);
     }
 
     @And("a webhook deleted")
@@ -149,12 +158,16 @@ public class ObjectActionSteps {
         return new Thread(() -> headlessAdminUserSteps.updateTheUser(cucumberData));
     }
 
+    private Thread getCreateUserAccount(Map<String, String> cucumberData) {
+        return new Thread(() -> headlessAdminUserSteps.aNewUserIsCreated(cucumberData));
+    }
+
     private Thread getOpenThePortAndListen() {
         return new Thread(() -> {
             try {
                 java.net.Socket echoSocket;
                 BufferedReader in;
-                echoSocket = socket(createServerSocket(Integer.parseInt(definedURL.substring(definedURL.length()-4))));
+                echoSocket = socket(createServerSocket(Integer.parseInt(definedURL.substring(definedURL.length() - 4))));
                 in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
                 char[] buffer = new char[3000];
                 int output = in.read(buffer, 0, 3000);
@@ -215,22 +228,35 @@ public class ObjectActionSteps {
     }
 
     @Then("the payload is matching the JSON format defined for {string} in the Headless API")
-    public void thePayloadIsMatchingTheJSONFormatDefinedForInTheHeadlessAPI(String objectDefinitionType) {
+    public void thePayloadIsMatchingTheJSONFormatDefinedForInTheHeadlessAPI(String objectDefinitionType,Map<String, String> cucumberData) {
         switch (objectDefinitionType) {
             case "userUpdate":
                 PayloadUserAccountUpdated payloadUserAccountUpdated = gson.fromJson(outputResponse.substring(outputResponse.indexOf("{")), PayloadUserAccountUpdated.class);
                 Assert.assertNotNull(payloadUserAccountUpdated.getModelUser());
                 Assert.assertNotNull(payloadUserAccountUpdated.getOriginalUser());
+                assertAll("Should return body with correct information",
+                        () -> assertEquals(cucumberData.get("alternateName"),payloadUserAccountUpdated.getModelUser().getAlternateName()),
+                        () -> assertEquals(cucumberData.get("emailAddress"),payloadUserAccountUpdated.getModelUser().getEmailAddress()),
+                        () -> assertEquals(cucumberData.get("givenName"),payloadUserAccountUpdated.getModelUser().getGivenName()),
+                        () -> assertEquals(cucumberData.get("familyName"),payloadUserAccountUpdated.getModelUser().getFamilyName())
+                );
                 break;
             case "managerDeletion":
                 PayloadCustomObject payloadCustomObject = gson.fromJson(outputResponse.substring(outputResponse.indexOf("{")), PayloadCustomObject.class);
                 Assert.assertNotNull(payloadCustomObject.getObjectEntry());
                 break;
             case "managerExternalModel":
-                Assert.fail("fill in the step!");
+                PayloadCustomObject payloadCustomObject1 = gson.fromJson(outputResponse.substring(outputResponse.indexOf("{")),PayloadCustomObject.class);
+                Assert.assertEquals(cucumberData.get("firstname"),payloadCustomObject1.getObjectEntry().getProperties().getFirstname());
                 break;
             case "userExternalModel":
-                Assert.fail("fill in this step as well!");
+                PayloadUserAccountCreated payloadUserAccountCreated = gson.fromJson(outputResponse.substring(outputResponse.indexOf("{")), PayloadUserAccountCreated.class);
+                assertAll("Should return body with correct information",
+                        () -> assertEquals(cucumberData.get("alternateName"),payloadUserAccountCreated.getModelUser().getAlternateName()),
+                        () -> assertEquals(cucumberData.get("emailAddress"),payloadUserAccountCreated.getModelUser().getEmailAddress()),
+                        () -> assertEquals(cucumberData.get("givenName"),payloadUserAccountCreated.getModelUser().getGivenName()),
+                        () -> assertEquals(cucumberData.get("familyName"),payloadUserAccountCreated.getModelUser().getFamilyName())
+                );
                 break;
             default:
                 Assert.fail("no match");
@@ -240,5 +266,15 @@ public class ObjectActionSteps {
     @Then("the information is not sent to the URL defined in the webhook")
     public void theInformationIsNotSentToTheURLDefinedInTheWebhook() {
         Assert.assertNull(outputResponse);
+    }
+
+    @When("a new user is created after setting up the webhook")
+    public void aNewUserIsCreatedAfterSettingUpTheWebhook(Map<String, String> cucumberData) {
+        Thread openThePortAndListen = getOpenThePortAndListen();
+        Thread createTheUser = getCreateUserAccount(cucumberData);
+        openThePortAndListen.start();
+        createTheUser.start();
+        joinThread(openThePortAndListen);
+        joinThread(createTheUser);
     }
 }

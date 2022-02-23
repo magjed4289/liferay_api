@@ -20,12 +20,15 @@ Feature: Webhooks support in Objects API
       | givenName     | firstname            |
       | familyName    | familyName           |
     When updating the user after setting up the webhook
-      | alternateName        | myAlternateName1       |
-      | alternateNameUpdated | myAlternateNameUpdated |
-      | emailAddress         | user1@myusertest.com   |
-      | givenName            | firstname              |
-      | familyName           | familyName             |
+      | alternateName | myAlternatenameupdated |
+      | emailAddress  | user1@myusertest.com   |
+      | givenName     | firstnameupdated       |
+      | familyName    | familynameupdated      |
     Then  the payload is matching the JSON format defined for "userUpdate" in the Headless API
+      | alternateName | myalternatenameupdated |
+      | emailAddress  | user1@myusertest.com   |
+      | givenName     | firstnameupdated       |
+      | familyName    | familynameupdated      |
 
   Scenario: On After Delete webhook for Custom Object
     Given active object definitions created
@@ -37,6 +40,8 @@ Feature: Webhooks support in Objects API
       | Clarissa  |
     When manager account deleted after setting up the webhook
     Then  the payload is matching the JSON format defined for "managerDeletion" in the Headless API
+      | firstname |
+      | Clarissa  |
 
   Scenario: On After Add webhook for Custom Object Updated
     Given active object definitions created
@@ -67,21 +72,20 @@ Feature: Webhooks support in Objects API
     And a webhook "onAfterAdd" with URL "localhost:7878" for "Manager" created
     When manager accounts created after setting up the webhook
       | firstname |
-      |           |
       | Anthony   |
-      |           |
-      |           |
-      |           |
-      |           |
-      |           |
     Then the payload is matching the JSON format defined for "managerExternalModel" in the Headless API
+      | firstname | Anthony |
 
   Scenario: External model of On After Add webhook for User
     Given a site with "User" object defined
-    And a webhook "onAfterAdd" with URL "localhost:9697" for "User" created
-    When a new user is created
-      | alternateName | myAlternateName1     |
-      | emailAddress  | user1@myusertest.com |
-      | givenName     | firstname            |
-      | familyName    | familyName           |
+    And a webhook "onAfterAdd" with URL "localhost:7879" for "User" created
+    When a new user is created after setting up the webhook
+      | alternateName | annasorokin      |
+      | emailAddress  | anna@sorokin.com |
+      | givenName     | Anna             |
+      | familyName    | Sorokin          |
     Then the payload is matching the JSON format defined for "userExternalModel" in the Headless API
+      | alternateName | annasorokin      |
+      | emailAddress  | anna@sorokin.com |
+      | givenName     | Anna             |
+      | familyName    | Sorokin          |

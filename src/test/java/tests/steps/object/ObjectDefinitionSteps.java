@@ -20,6 +20,7 @@ import tests.model.object.objectDefinition.employeesWithAggregationTerms.Employe
 import tests.model.object.objectDefinition.employeesWithNestedFields.EmployeesWithNestedFields;
 import tests.model.object.objectDefinition.nestedObjectData.*;
 import tests.model.object.objectDefinition.objectDefinitions.ObjectDefinitions;
+import tests.model.object.objectRelationship.relationshipsAsNestedFields.EmployeeManagerRelationshipAsNestedFields;
 
 
 import java.util.ArrayList;
@@ -174,6 +175,29 @@ public class ObjectDefinitionSteps {
                 for (int i = 0; i < employeesWithNestedFields.getItems().size(); i++) {
                     if (employeesWithNestedFields.getItems().get(i).getFirstname().equals(nestedObjectData.getEmployee())) {
                         Assert.assertEquals(employeesWithNestedFields.getItems().get(i).getR_supervisor_c_manager().getFirstname(), nestedObjectData.getManager());
+                    }
+                }
+            } else {
+                Assert.fail("There's more items in the employees objects than in the table!");
+            }
+
+        }
+    }
+
+    @Then("the data is being delivered correctly")
+    public void theDataIsBeingDeliveredCorrectly(DataTable nestedObjectDataTable) {
+        for (Map<String, String> columns : getRows(nestedObjectDataTable)) {
+            objectDefinitionDataCatalog.addNestedObjectData(new NestedObjectData(columns.get("employee"), columns.get("manager")));
+        }
+        EmployeeManagerRelationshipAsNestedFields employeeManagerRelationshipAsNestedFields = gson.fromJson(baseModel.getResponse().asString(), EmployeeManagerRelationshipAsNestedFields.class);
+        for (NestedObjectData nestedObjectData : objectDefinitionDataCatalog.getNestedObjectDataList()) {
+            if (employeeManagerRelationshipAsNestedFields.getData().getC().getEmployees().getItems().size() == objectDefinitionDataCatalog.getNestedObjectDataList().size()) {
+                for (int i = 0; i < employeeManagerRelationshipAsNestedFields.getData().getC().getEmployees().getItems().size(); i++) {
+                    if (employeeManagerRelationshipAsNestedFields.getData().getC().getEmployees().getItems().get(i).getFirstname().equals(nestedObjectData.getEmployee())) {
+                        Assert.assertNotNull("ManagerId is null.",employeeManagerRelationshipAsNestedFields.getData().getC().getEmployees().getItems().get(i).getManagerId());
+                        baseModel.setResponse(objectDefinitionEndpoints.getManager(employeeManagerRelationshipAsNestedFields.getData().getC().getEmployees().getItems().get(i).getManagerId().toString()));
+                        Manager manager = gson.fromJson(baseModel.getResponse().asString(), Manager.class);
+                        Assert.assertEquals(manager.getFirstname(),nestedObjectData.getManager());
                     }
                 }
             } else {

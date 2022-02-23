@@ -3,9 +3,6 @@ package tests.model.object.objectAction.payload.userAccountPayload;
 
 import lombok.Data;
 import tests.model.object.Actions;
-import tests.model.object.objectAction.payload.userAccountPayload.RoleBrief;
-import tests.model.object.objectAction.payload.userAccountPayload.SiteBrief;
-import tests.model.object.objectAction.payload.userAccountPayload.UserAccountContactInformation;
 
 import java.util.List;
 
