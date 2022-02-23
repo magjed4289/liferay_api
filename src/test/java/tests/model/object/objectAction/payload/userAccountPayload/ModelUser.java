@@ -20,6 +20,7 @@ public class ModelUser {
     public Object honorificSuffix;
     public Object accountBriefs;
     public String emailAddress;
+    public Object password;
     public Long dateCreated;
     public UserAccountContactInformation userAccountContactInformation;
     public String familyName;

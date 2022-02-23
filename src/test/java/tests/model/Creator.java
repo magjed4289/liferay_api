@@ -6,11 +6,13 @@ import lombok.Data;
 @Data
 public class Creator {
 
-    private String additionalName;
-    private String contentType;
-    private String familyName;
-    private String givenName;
-    private Integer id;
-    private String name;
-
+    public Object profileURL;
+    public Object image;
+    public Object xClassName;
+    public String familyName;
+    public String givenName;
+    public String name;
+    public String id;
+    public String additionalName;
+    public String contentType;
 }

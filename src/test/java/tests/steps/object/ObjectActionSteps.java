@@ -6,6 +6,10 @@ import io.cucumber.java.After;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.cucumber.messages.internal.com.fasterxml.jackson.core.JsonParseException;
+import io.cucumber.messages.internal.com.fasterxml.jackson.core.JsonProcessingException;
+import io.cucumber.messages.internal.com.fasterxml.jackson.databind.JsonMappingException;
+import io.cucumber.messages.internal.com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Assert;
 import tests.model.BaseModel;
 import tests.model.object.objectAction.Parameters;
@@ -228,9 +232,15 @@ public class ObjectActionSteps {
     }
 
     @Then("the payload is matching the JSON format defined for {string} in the Headless API")
-    public void thePayloadIsMatchingTheJSONFormatDefinedForInTheHeadlessAPI(String objectDefinitionType,Map<String, String> cucumberData) {
+    public void thePayloadIsMatchingTheJSONFormatDefinedForInTheHeadlessAPI(String objectDefinitionType,Map<String, String> cucumberData) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
         switch (objectDefinitionType) {
             case "userUpdate":
+                try {
+                    mapper.readValue(outputResponse.substring(outputResponse.indexOf("{")), PayloadUserAccountUpdated.class);
+                } catch (JsonParseException | JsonMappingException e) {
+                    Assert.fail("Does not match! "+e);
+                }
                 PayloadUserAccountUpdated payloadUserAccountUpdated = gson.fromJson(outputResponse.substring(outputResponse.indexOf("{")), PayloadUserAccountUpdated.class);
                 Assert.assertNotNull(payloadUserAccountUpdated.getModelUser());
                 Assert.assertNotNull(payloadUserAccountUpdated.getOriginalUser());
@@ -242,14 +252,29 @@ public class ObjectActionSteps {
                 );
                 break;
             case "managerDeletion":
+                try {
+                    mapper.readValue(outputResponse.substring(outputResponse.indexOf("{")), PayloadCustomObject.class);
+                } catch (JsonParseException | JsonMappingException e) {
+                    Assert.fail("Does not match! "+e);
+                }
                 PayloadCustomObject payloadCustomObject = gson.fromJson(outputResponse.substring(outputResponse.indexOf("{")), PayloadCustomObject.class);
                 Assert.assertNotNull(payloadCustomObject.getObjectEntry());
                 break;
             case "managerExternalModel":
+                try {
+                    mapper.readValue(outputResponse.substring(outputResponse.indexOf("{")), PayloadCustomObject.class);
+                } catch (JsonParseException | JsonMappingException e) {
+                    Assert.fail("Does not match! "+e);
+                }
                 PayloadCustomObject payloadCustomObject1 = gson.fromJson(outputResponse.substring(outputResponse.indexOf("{")),PayloadCustomObject.class);
                 Assert.assertEquals(cucumberData.get("firstname"),payloadCustomObject1.getObjectEntry().getProperties().getFirstname());
                 break;
             case "userExternalModel":
+                try {
+                    mapper.readValue(outputResponse.substring(outputResponse.indexOf("{")), PayloadUserAccountCreated.class);
+                } catch (JsonParseException | JsonMappingException e) {
+                    Assert.fail("Does not match! "+e);
+                }
                 PayloadUserAccountCreated payloadUserAccountCreated = gson.fromJson(outputResponse.substring(outputResponse.indexOf("{")), PayloadUserAccountCreated.class);
                 assertAll("Should return body with correct information",
                         () -> assertEquals(cucumberData.get("alternateName"),payloadUserAccountCreated.getModelUser().getAlternateName()),

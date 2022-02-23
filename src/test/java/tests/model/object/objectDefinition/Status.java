@@ -5,8 +5,9 @@ import lombok.Data;
 @Data
 public class Status {
 
+    public String label_i18n;
     public Integer code;
+    public Object xClassName;
     public String label;
-    public String labelI18n;
 }
 
