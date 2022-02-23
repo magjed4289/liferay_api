@@ -7,7 +7,7 @@ import lombok.Data;
 public class RoleBrief {
 
     public Object xClassName;
-    public Object nameI18n;
+    public Object name_i18n;
     public String name;
     public String id;
 }

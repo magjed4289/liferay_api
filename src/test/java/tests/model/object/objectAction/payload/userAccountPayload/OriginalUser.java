@@ -3,9 +3,6 @@ package tests.model.object.objectAction.payload.userAccountPayload;
 
 import lombok.Data;
 import tests.model.object.Actions;
-import tests.model.object.objectAction.payload.userAccountPayload.RoleBrief;
-import tests.model.object.objectAction.payload.userAccountPayload.SiteBrief;
-import tests.model.object.objectAction.payload.userAccountPayload.UserAccountContactInformation;
 
 import java.util.List;
 
@@ -23,6 +20,7 @@ public class OriginalUser {
     public Object honorificSuffix;
     public Object accountBriefs;
     public String emailAddress;
+    public Object password;
     public Long dateCreated;
     public UserAccountContactInformation userAccountContactInformation;
     public String familyName;
