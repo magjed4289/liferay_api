@@ -53,7 +53,7 @@ public class ObjectDefinitionSteps {
         objectDefinitionDataCatalog = new ObjectDefinitionDataCatalog();
     }
 
-    @After
+    //@After
     public void cleanUp() {
         if (!managersIdsList.isEmpty()) {
             deleteManagers();
@@ -169,6 +169,7 @@ public class ObjectDefinitionSteps {
         for (Map<String, String> columns : getRows(nestedObjectDataTable)) {
             objectDefinitionDataCatalog.addNestedObjectData(new NestedObjectData(columns.get(employee), columns.get(manager)));
         }
+        System.out.println(baseModel.getResponse().asString());
         EmployeesWithNestedFields employeesWithNestedFields = gson.fromJson(baseModel.getResponse().asString(), EmployeesWithNestedFields.class);
         for (NestedObjectData nestedObjectData : objectDefinitionDataCatalog.getNestedObjectDataList()) {
             if (employeesWithNestedFields.getItems().size() == objectDefinitionDataCatalog.getNestedObjectDataList().size()) {
@@ -189,6 +190,7 @@ public class ObjectDefinitionSteps {
         for (Map<String, String> columns : getRows(nestedObjectDataTable)) {
             objectDefinitionDataCatalog.addNestedObjectData(new NestedObjectData(columns.get("employee"), columns.get("manager")));
         }
+        System.out.println(baseModel.getResponse().asString());
         EmployeeManagerRelationshipAsNestedFields employeeManagerRelationshipAsNestedFields = gson.fromJson(baseModel.getResponse().asString(), EmployeeManagerRelationshipAsNestedFields.class);
         for (NestedObjectData nestedObjectData : objectDefinitionDataCatalog.getNestedObjectDataList()) {
             if (employeeManagerRelationshipAsNestedFields.getData().getC().getEmployees().getItems().size() == objectDefinitionDataCatalog.getNestedObjectDataList().size()) {
@@ -301,6 +303,7 @@ public class ObjectDefinitionSteps {
 
     @Then("I receive the information about the aggregationTerm as facets of the response")
     public void iReceiveTheInformationAboutTheAggregationTermAsFacetsOfTheResponse(DataTable aggregationTermsDataTable) {
+        System.out.println(baseModel.getResponse().asString());
         for (Map<String, String> columns : getRows(aggregationTermsDataTable)) {
             objectDefinitionDataCatalog.addAggregationTermsData(new AggregationTermsData(columns.get("numberOfOccurrences"), columns.get("relatedManagerFirstname")));
         }

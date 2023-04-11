@@ -21,7 +21,7 @@ public class HeadlessAdminUserSteps {
         this.userAccountsIdsList = new ArrayList<>();
     }
 
-    @After
+    //@After
     public void deleteAccountsAndUserAccounts(){
         if(!userAccountsIdsList.isEmpty()){
             for(String userAccountId:userAccountsIdsList){

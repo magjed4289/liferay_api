@@ -4,30 +4,49 @@ Feature: Extend Object APIs with advanced features
 
   Background:
     Given active object definitions created
-      | name     | en_US_label | en_US_plural_label | requiredStringField |
-      | Employee | Employee    | Employees          | firstname           |
-      | Manager  | Manager     | Managers           | firstname           |
-    Given a relationship between two object definitions created
-      | name        | supervisor |
-      | en_US_label | supervisor |
-      | type        | oneToMany  |
-      | object1name | Manager    |
-      | object2name | Employee   |
+      | name       | en_US_label | en_US_plural_label | requiredStringField |
+      | University | University  | Universities       | name                |
+      | Subject    | Subject     | Subjects           | name                |
+      | Student    | Student     | Students           | name                |
 
-  Scenario: Nested fields in oneToMany relationship
-    Given manager accounts created
-      | firstname |
-      | Alex      |
-      | Greta     |
-    Given employee accounts created
-      | firstname | supervisor |
-      | Jack      | Alex       |
-      | Otis      | Greta      |
-    When calling for employees with "manager" as nestedFields parameter
-    Then "employee" information should be provided with "manager" information nested as an object
-      | employee | manager |
-      | Jack     | Alex    |
-      | Otis     | Greta   |
+
+  Scenario: Create bunch of relationships
+    Given a relationship between two object definitions created
+      | name        | studentSubjects |
+      | en_US_label | studentSubjects |
+      | type        | oneToMany   |
+      | object1name | Student     |
+      | object2name | Subject     |
+    Given a relationship between two object definitions created
+      | name        | subjectUniversities |
+      | en_US_label | subjectUniversities |
+      | type        | oneToMany          |
+      | object1name | Subject            |
+      | object2name | University         |
+    Given a relationship between two object definitions created
+      | name        | universityStudents |
+      | en_US_label | universityStudents |
+      | type        | oneToMany             |
+      | object1name | University            |
+      | object2name | Student               |
+    Given a relationship between two object definitions created
+      | name        | studentsUniversities |
+      | en_US_label | studentsUniversities |
+      | type        | manyToMany       |
+      | object1name | Student          |
+      | object2name | University       |
+    Given a relationship between two object definitions created
+      | name        | subjectsStudents |
+      | en_US_label | subjectsStudents  |
+      | type        | manyToMany        |
+      | object1name | Subject           |
+      | object2name | Student           |
+    Given a relationship between two object definitions created
+      | name        | universitiesSubjects  |
+      | en_US_label | universitiesSubjects  |
+      | type        | manyToMany |
+      | object1name | University |
+      | object2name | Subject    |
 
   Scenario: Nested fields in oneToMany relationship after updating a relationship
     Given manager accounts created
