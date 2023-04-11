@@ -23,5 +23,6 @@ public class GraphQLSteps {
         GraphQLQuery graphQLQuery = new GraphQLQuery();
         graphQLQuery.setQuery(query);
         baseModel.setResponse(graphQLEndpoint.graphQLQuery(graphQLQuery));
+        System.out.println(baseModel.getResponse().prettyPrint());
     }
 }

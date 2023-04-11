@@ -4,27 +4,24 @@ Feature: Relationships in Objects should be exposed in GraphQL as nested fields
 
   Background:
     Given active object definitions created
-      | name     | en_US_label | en_US_plural_label | requiredStringField |
-      | Employee | Employee    | Employees          | firstname           |
-      | Manager  | Manager     | Managers           | firstname           |
+      | name       | en_US_label | en_US_plural_label | requiredStringField |
+      | Student    | Student     | Students           | firstname           |
+      | Subject    | Subject     | Subjects           | name                |
+      | University | University  | Universities       | name                |
+
+
     Given a relationship between two object definitions created
-      | name        | supervisor |
-      | en_US_label | supervisor |
-      | type        | oneToMany  |
-      | object1name | Manager    |
-      | object2name | Employee   |
+      | name        | studentSubjects |
+      | en_US_label | studentSubjects |
+      | type        | oneToMany       |
+      | object1name | Student         |
+      | object2name | Subject         |
+
 
   Scenario: Relationships in Objects exposed in GraphQL as nested fields
-    Given manager accounts created
-      | firstname |
-      | Alex      |
-      | Greta     |
-    Given employee accounts created
-      | firstname | supervisor |
-      | Jack      | Alex       |
-      | Otis      | Greta      |
-    When performing a GraphQL query "{c{employees{items {firstname employeeId managerId}}}}"
-    Then the data is being delivered correctly
-      | employee | manager |
-      | Jack     | Alex    |
-      | Otis     | Greta   |
+    Given a relationship between two object definitions created
+      | name        | subjectUniversities |
+      | en_US_label | subjectUniversities |
+      | type        | oneToMany           |
+      | object1name | Subject             |
+      | object2name | University          |

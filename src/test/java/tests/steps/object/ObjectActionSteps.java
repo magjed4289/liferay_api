@@ -56,7 +56,7 @@ public class ObjectActionSteps {
         this.headlessAdminUserSteps = headlessAdminUserSteps;
     }
 
-    @After()
+    //@After()
     public void deleteObjectDefinitionActions() {
         ObjectDefinitions objectDefinitions = getObjectDefinitions();
         for (int i = 0; i < objectDefinitions.getItems().size(); i++) {
@@ -68,7 +68,7 @@ public class ObjectActionSteps {
         }
     }
 
-    @After()
+   // @After()
     public void deleteAccountsAndUserAccounts(){
         headlessAdminUserSteps.deleteAccountsAndUserAccounts();
     }
