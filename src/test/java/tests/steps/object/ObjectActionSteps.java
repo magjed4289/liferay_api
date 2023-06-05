@@ -12,6 +12,7 @@ import io.cucumber.messages.internal.com.fasterxml.jackson.databind.JsonMappingE
 import io.cucumber.messages.internal.com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Assert;
 import tests.model.BaseModel;
+import tests.model.object.Label;
 import tests.model.object.objectAction.Parameters;
 import tests.model.object.objectAction.ObjectActionCreator;
 import tests.model.object.objectAction.allObjectActions.AllObjectActions;
@@ -90,7 +91,8 @@ public class ObjectActionSteps {
             assert objectId != null;
         }
         Parameters parameters = getParameters(url);
-        ObjectActionCreator objectActionCreator = getObjectActionCreator(objectName, objectActionTriggerKey, parameters);
+        Label label = getLabel(objectActionTriggerKey);
+        ObjectActionCreator objectActionCreator = getObjectActionCreator(label, objectName, objectActionTriggerKey, parameters);
         baseModel.setResponse(objectActionEndpoints.postObjectDefinitionObjectAction(objectActionCreator, objectId));
         baseModel.checkResponseCode(200);
         actionId = baseModel.getResponse().then().extract().path("id").toString();
@@ -108,7 +110,8 @@ public class ObjectActionSteps {
             assert objectId != null;
         }
         Parameters parameters = getParameters(url);
-        ObjectActionCreator objectActionCreator = getObjectActionCreator(objectName, objectActionTriggerKey, parameters);
+        Label label = getLabel(objectActionTriggerKey);
+        ObjectActionCreator objectActionCreator = getObjectActionCreator(label, objectName, objectActionTriggerKey, parameters);
         baseModel.setResponse(objectActionEndpoints.updateObjectDefinitionObjectAction(objectActionCreator, actionId));
         baseModel.checkResponseCode(200);
         Assert.assertEquals(baseModel.getResponse().then().extract().path("parameters.url").toString(), url);
@@ -131,9 +134,16 @@ public class ObjectActionSteps {
                 .build();
     }
 
-    private ObjectActionCreator getObjectActionCreator(String objectName, String objectActionTriggerKey, Parameters parameters) {
+    private Label getLabel(String label) {
+        return Label.builder()
+                .en_US(label)
+                .build();
+    }
+
+    private ObjectActionCreator getObjectActionCreator(Label label, String objectName, String objectActionTriggerKey, Parameters parameters) {
         return ObjectActionCreator.builder()
                 .active(true)
+                .label(label)
                 .name(objectActionTriggerKey + objectName)
                 .objectActionTriggerKey(objectActionTriggerKey)
                 .objectActionExecutorKey("webhook")
@@ -237,6 +247,7 @@ public class ObjectActionSteps {
         switch (objectDefinitionType) {
             case "userUpdate":
                 try {
+                    System.out.println("OUTPUT "+outputResponse);
                     mapper.readValue(outputResponse.substring(outputResponse.indexOf("{")), PayloadUserAccountUpdated.class);
                 } catch (JsonParseException | JsonMappingException e) {
                     Assert.fail("Does not match! "+e);
