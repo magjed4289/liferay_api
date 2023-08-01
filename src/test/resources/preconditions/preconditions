@@ -1,3 +1,5 @@
+1. Create University entry with related entries of all kind
+
 curl -X POST 'http://localhost:8080/o/c/universities/' \
 --header 'accept: application/json' \
 --header 'Content-Type: application/json' \
@@ -12,9 +14,9 @@ curl -X POST 'http://localhost:8080/o/c/universities/' \
           "subjectBooks": [
           {"name": "Algebra Book",
           "booksAuthors":[{
-          "name": "Pitagoras",
+          "name": "Pythagoras",
           "authorAgents": [{
-          "name": "Agent of Pitagoras",
+          "name": "Agent of Pythagoras",
           "agentsCities": [{
           "name": "Athens",
           "cityStates": [{
@@ -30,6 +32,8 @@ curl -X POST 'http://localhost:8080/o/c/universities/' \
     }
   ]
 }'
+
+2. Create API Application
 
 curl -X POST 'http://localhost:8080/o/headless-builder/applications/' \
 --header 'accept: application/json' \
@@ -68,12 +72,12 @@ curl -X POST 'http://localhost:8080/o/headless-builder/applications/' \
   "externalReferenceCode": "APPLICATION"
 }'
 
+3. Relate endpoint and schema through requestAPISchemaToAPIEndpoints and responseAPISchemaToAPIEndpoints
 
 curl -X PUT 'http://localhost:8080/o/headless-builder/schemas/by-external-reference-code/SCHEMA_APP/requestAPISchemaToAPIEndpoints/ENDPOINT' \
 --header 'accept: application/json' \
 --header 'Content-Type: application/json' \
 -u 'test@liferay.com:test'
-
 
 
 curl -X PUT 'http://localhost:8080/o/headless-builder/schemas/by-external-reference-code/SCHEMA_APP/responseAPISchemaToAPIEndpoints/ENDPOINT' \
