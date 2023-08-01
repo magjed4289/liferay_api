@@ -1,0 +1,82 @@
+curl -X POST 'http://localhost:8080/o/c/universities/' \
+--header 'accept: application/json' \
+--header 'Content-Type: application/json' \
+-u 'test@liferay.com:test' \
+-d '{
+  "name": "Oxford",
+  "universityStudents": [
+    {
+      "name": "Marge",
+      "studentsSubjects": [
+        {"name": "Math",
+          "subjectBooks": [
+          {"name": "Algebra Book",
+          "booksAuthors":[{
+          "name": "Pitagoras",
+          "authorAgents": [{
+          "name": "Agent of Pitagoras",
+          "agentsCities": [{
+          "name": "Athens",
+          "cityStates": [{
+          "name":"Greece"
+          }]
+          }]
+          }]
+          }]
+          }
+          ]
+        }
+      ]
+    }
+  ]
+}'
+
+curl -X POST 'http://localhost:8080/o/headless-builder/applications/' \
+--header 'accept: application/json' \
+--header 'Content-Type: application/json' \
+-u 'test@liferay.com:test' \
+-d '{
+  "apiApplicationToAPIEndpoints": [
+    {
+      "path": "/path-endpoint",
+      "scope": "company",
+      "name": "GetEndpoint",
+      "description": "description",
+      "httpMethod": "get",
+      "externalReferenceCode": "ENDPOINT"
+    }
+  ],
+  "baseURL": "test",
+  "applicationStatus": "published",
+  "apiApplicationToAPISchemas": [
+    {
+      "apiSchemaToAPIProperties": [
+        {
+          "objectFieldERC": "nameState",
+          "name": "nameState",
+          "description": "description",
+          "objectRelationshipNames": "universityStudents,studentsSubjects,subjectBooks,booksAuthors,authorAgents,agentsCities,cityStates"
+        }
+      ],
+      "mainObjectDefinitionERC": "University",
+      "name": "schema",
+      "description": "description",
+      "externalReferenceCode": "SCHEMA_APP"
+    }
+  ],
+  "title": "title",
+  "externalReferenceCode": "APPLICATION"
+}'
+
+
+curl -X PUT 'http://localhost:8080/o/headless-builder/schemas/by-external-reference-code/SCHEMA_APP/requestAPISchemaToAPIEndpoints/ENDPOINT' \
+--header 'accept: application/json' \
+--header 'Content-Type: application/json' \
+-u 'test@liferay.com:test'
+
+
+
+curl -X PUT 'http://localhost:8080/o/headless-builder/schemas/by-external-reference-code/SCHEMA_APP/responseAPISchemaToAPIEndpoints/ENDPOINT' \
+--header 'accept: application/json' \
+--header 'Content-Type: application/json' \
+-u 'test@liferay.com:test'
