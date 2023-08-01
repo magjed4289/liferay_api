@@ -17,4 +17,5 @@ public class ObjectDefinition {
     public Label pluralLabel;
     public Boolean portlet;
     public String scope;
+    public String externalReferenceCode;
 }

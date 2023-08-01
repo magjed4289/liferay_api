@@ -76,7 +76,13 @@ public class ObjectDefinitionSteps {
     @Given("active object definitions created")
     public void activeObjectDefinitionsCreated(DataTable objectDefinitionDataTable) {
         for (Map<String, String> columns : getRows(objectDefinitionDataTable)) {
-            objectDefinitionDataCatalog.addObjectDefinitionData(new ObjectDefinitionData(columns.get("name"), columns.get("en_US_label"), columns.get("en_US_plural_label"), columns.get("requiredStringField")));
+            objectDefinitionDataCatalog.addObjectDefinitionData(new ObjectDefinitionData(
+                    columns.get("name"),
+                    columns.get("en_US_label"),
+                    columns.get("en_US_plural_label"),
+                    columns.get("fieldErc"),
+                    columns.get("requiredStringField"),
+                    columns.get("externalReferenceCode")));
         }
         baseModel.setResponse(objectDefinitionEndpoints.getObjectDefinitions());
         baseModel.checkResponseCode(200);
@@ -125,6 +131,7 @@ public class ObjectDefinitionSteps {
                 .objectFields(objectFieldList)
                 .active(true)
                 .portlet(true)
+                .externalReferenceCode(objectDefinitionData.getExternalReferenceCode())
                 .name(objectDefinitionData.getName())
                 .scope("company")
                 .build();
@@ -151,6 +158,7 @@ public class ObjectDefinitionSteps {
         return ObjectField.builder()
                 .DBType("String")
                 .businessType("Text")
+                .externalReferenceCode(objectDefinitionData.getFieldErc())
                 .indexed(true)
                 .indexedAsKeyword(true)
                 .label(labelField)

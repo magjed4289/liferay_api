@@ -4,9 +4,9 @@ Feature: Extend Object APIs with advanced features
 
   Background:
     Given active object definitions created
-      | name     | en_US_label | en_US_plural_label | requiredStringField |
-      | Employee | Employee    | Employees          | firstname           |
-      | Manager  | Manager     | Managers           | firstname           |
+      | name     | en_US_label | en_US_plural_label | requiredStringField | fieldErc     | externalReferenceCode |
+      | Employee | Employee    | Employees          | firstname           | nameEmployee | Employee              |
+      | Manager  | Manager     | Managers           | firstname           | nameManager  | Manager               |
     Given a relationship between two object definitions created
       | name        | supervisor |
       | en_US_label | supervisor |

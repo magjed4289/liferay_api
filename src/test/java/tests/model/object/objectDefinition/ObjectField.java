@@ -15,4 +15,5 @@ public class ObjectField {
     public Label label;
     public String name;
     public Boolean required;
+    public String externalReferenceCode;
 }
